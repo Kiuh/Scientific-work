@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal interface IDeath
+internal interface IReproduction
 {
-    public delegate void Death();
+    public void SetBirthDelegate(Cell.BirthNew birthNew);
 }
 

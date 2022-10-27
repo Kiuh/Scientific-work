@@ -17,9 +17,9 @@ public class ContonueGeneratin : MonoBehaviour, IPointerClickHandler
     {
         if (choosedgeneration != "")
         {
-            Instantiate(Gen_Info);
-            Gen_Info.GetComponent<GenInfo>().Generation_name = choosedgeneration;
-            DontDestroyOnLoad(Gen_Info);
+            GameObject go = Instantiate(Gen_Info);
+            go.GetComponent<GenInfo>().Generation_name = choosedgeneration;
+            DontDestroyOnLoad(go);
             SceneManager.LoadScene("Simulation");
         }
         else

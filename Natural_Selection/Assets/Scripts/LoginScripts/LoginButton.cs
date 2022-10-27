@@ -13,15 +13,9 @@ public class LoginButton : MonoBehaviour, IPointerClickHandler
     TMP_Text error_massage;
     public void OnPointerClick(PointerEventData eventData)
     {
-        string error = "";
-        ServerSpeaker.LoginData loginData = new()
-        {
-            login = login.text,
-            password = password.text,
-        };
-        if (ServerSpeaker.Login(loginData, ref error))
+        if (ServerSpeaker.Login(new ServerSpeaker.LoginData(login.text, password.text)))
             SceneManager.LoadScene("MainMenu");
         else
-            error_massage.text = error;
+            error_massage.text = "Something Wrong";
     }
 }

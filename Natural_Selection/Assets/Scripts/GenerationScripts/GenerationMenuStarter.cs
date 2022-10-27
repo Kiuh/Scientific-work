@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,14 +27,14 @@ public class GenerationMenuStarter : MonoBehaviour
 
     public void FillListWithItems()
     {
-        List<ServerSpeaker.GenerationData1> gens = ServerSpeaker.GetGenerations_Names_Types();
-        foreach (var g in gens)
+        var generations = ServerSpeaker.GetGenerations();
+        foreach (var g in generations.generations)
         {
             GameObject go = Instantiate(GenerationListItem, content.transform);
             go.GetComponent<GenerationItemList>().InitListItem(
                 g.name,
-                Convert.ToString(ServerSpeaker.GetGeneration_Time(g.name).time),
-                Convert.ToString(ServerSpeaker.GetGeneration_LifeEnds(g.name).LifeEnds),
+                Convert.ToString(ServerSpeaker.GetGenerationTime(g.name).time),
+                Convert.ToString(ServerSpeaker.GetGenerationLifeEnds(g.name).life_ends),
                 g.life_type
             );
             go.GetComponent<GenerationItemList>().InfoPanel = InfoPanel;

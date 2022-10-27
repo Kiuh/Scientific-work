@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PositionX : MonoBehaviour, IProperty, IValue
 {
-    float x;
-    public PositionX(float x)
+    public float Value
     {
-        this.x = x;
+        get => transform.position.x;
+        set => transform.position = new Vector3(value, transform.position.y, transform.position.z);
     }
-
-    public float Value { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
+    public void SetRandomValue()
+    {
+        return;
+    }
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {
         return;

@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 internal interface IValue
 {
     public float Value { get; set; }
+    public void SetRandomValue();
 }
 

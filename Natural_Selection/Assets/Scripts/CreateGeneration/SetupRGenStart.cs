@@ -29,10 +29,11 @@ public class SetupRGenStart : MonoBehaviour
 
     public void Start()
     {
-        List<string> maps = ServerSpeaker.GetMapsNames();
-        List<string> life_rules = ServerSpeaker.GetLifeRulesNames();
-        List<string> feeding_rules = ServerSpeaker.GetFeedingRulesNames();
-        List<string> ticks = ServerSpeaker.GetTicksNames().Select((x) => Convert.ToString(x)).ToList();
+        var all_data = ServerSpeaker.GetCreationVariants();
+        List<string> maps = all_data.map_names;
+        List<string> life_rules = all_data.life_types;
+        List<string> feeding_rules = all_data.feed_types;
+        List<string> ticks = all_data.ticks.Select((x) => Convert.ToString(x)).ToList();
 
         maps_dd.ClearOptions();
         maps_dd.AddOptions(maps);
@@ -47,8 +48,7 @@ public class SetupRGenStart : MonoBehaviour
         ticks_dd.AddOptions(ticks);
 
         start_options_dd.ClearOptions();
-        List<ServerSpeaker.StartGenerationRule> start_options = ServerSpeaker.GetGenerationSetupsAndJsons();
-        foreach (var item in start_options)
+        foreach (var item in all_data.setup_types)
         {
             start_options_dd.AddOptions(new List<string>() { item.name });
             GameObject go = Resources.Load("GenerationSetups/" + item.name) as GameObject;

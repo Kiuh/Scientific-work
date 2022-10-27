@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PositionY : MonoBehaviour
+public class PositionY : MonoBehaviour, IProperty, IValue
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public float Value { 
+        get => transform.position.y;
+        set => transform.position = new Vector3(transform.position.y, value, transform.position.z);
     }
-
-    // Update is called once per frame
-    void Update()
+    public void SetRandomValue()
     {
-        
+        return;
+    }
+    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    {
+        return;
     }
 }

@@ -10,6 +10,10 @@ public class MovmentSpeed : MonoBehaviour, IProperty, IValue
         this.speed = speed;
     }
     public float Value { get => speed; set => speed = value; }
+    public void SetRandomValue()
+    {
+        Value = Random.Range(2f, 4f);
+    }
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {
         return;

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4671668028504923688}
   - component: {fileID: 161660562187059340}
   m_Layer: 0
-  m_Name: RepeatSetup_LifeType
+  m_Name: RepeatSetupLifeType
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

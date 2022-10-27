@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 1624396105659643247}
   - component: {fileID: 1624396105659643244}
   m_Layer: 0
-  m_Name: Randon_Generation_Input
+  m_Name: Random_Generation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

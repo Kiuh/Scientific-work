@@ -1,19 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Net.Http;
 
 public static class ServerSpeaker
 {
-    public static string login;
+    static string URI = "";
+    static string current_login = "";
+    static HttpClient client = new HttpClient();
+    
     #region Вход в аккаунт
     public class LoginData
     {
         public string login;
         public string password;
+        public LoginData(string login, string password)
+        {
+            this.login = login;
+            this.password = password;
+        }
     }
-    public static bool Login(LoginData login_data, ref string error)
+    public static bool Login(LoginData data)
     {
-        login = login_data.login;
+        //current_login = data.login;
+        //var res = client.PatchAsync(URI + "/User", new StringContent(JsonUtility.ToJson(data))).Result;
+        //if (res.IsSuccessStatusCode) 
+        //    return true;
+        //else
+        //    return false;
         return true;
     }
     #endregion
@@ -23,143 +35,57 @@ public static class ServerSpeaker
         public string login;
         public string email;
         public string password;
+        public RegistrationData(string login, string email, string password)
+        {
+            this.login = login;
+            this.email = email;
+            this.password = password;
+        }
     }
-    public static bool Registration(RegistrationData registration_data, ref string error)
+    public static bool Registration(RegistrationData data)
     {
+        //var res = client.PutAsync(URI + "/User", new StringContent(JsonUtility.ToJson(data))).Result;
+        //if (res.IsSuccessStatusCode)
+        //    return true;
+        //else
+        //    return false;
         return true;
     }
     #endregion
-    #region Получить все имена и правила жизни генераций 
-    public class GenerationData1
+    
+    #region Получить все генерации (с информацией)
+    public static GenerationsResponse GetGenerations()
     {
-        public string name;
-        public string life_type;
-    }
-    public static List<GenerationData1> GetGenerations_Names_Types()
-    {
-        return new List<GenerationData1>() { new GenerationData1() { name = "Generation 1", life_type = "DEATH" } };
-    }
-    #endregion
-    #region Получить Карту, Частоту и Комментарии одной генерации
-    public class GenerationData2
-    {
-        public string map_name;
-        public string tick;
-        public string comment;
-    }
-    public static GenerationData2 GetGeneration_Map_Tick_Comments(string gen_name)
-    {
-        return new GenerationData2() { map_name = "Map_1", tick = "0.1", comment = "Some comments to discribe generstion." };
-    }
-    #endregion
-    #region Получить общее время генерации
-    public static GenerationTime GetGeneration_Time(string gen_name)
-    {
-        return new GenerationTime() { time = 0.1f };
-    }
-    public class GenerationTime
-    {
-        public float time;
-    }
-    #endregion
-    #region Получить количество вымираний в генерации
-    public static GenerationLifeEnds GetGeneration_LifeEnds(string gen_name)
-    {
-        return new GenerationLifeEnds() { LifeEnds = 2 }; ;
-    }
-    public class GenerationLifeEnds
-    {
-        public int LifeEnds;
-    }
-    #endregion
-    #region Удалить генерацию
-    public static void DeleteGeneration(string gen_name)
-    {
-
-    }
-    #endregion
-    #region Получить имена всех карт
-    public static List<string> GetMapsNames()
-    {
-        return new List<string>() { "Map_1" };
-    }
-    #endregion
-    #region Получить все правила жизней
-    public static List<string> GetLifeRulesNames()
-    {
-        return new List<string>() { "StandartLifeRule" };
-    }
-    #endregion
-    #region Получить все правила кормления
-    public static List<string> GetFeedingRulesNames()
-    {
-        return new List<string>() { "StandartFeedingRule" };
-    }
-    #endregion
-    #region Получить все частоты
-    public static List<float> GetTicksNames()
-    {
-        return new List<float>() { 0.1f };
-    }
-    #endregion
-    #region Получить все Правила первого разведения и их описания
-    public class StartGenerationRule
-    {
-        public string name;
-        public string json;
-    }
-    public static List<StartGenerationRule> GetGenerationSetupsAndJsons()
-    {
-        return new List<StartGenerationRule>() { 
-            new StartGenerationRule() { 
-                name = "Randon_Generation_Input",
-                json = ""
+        //string query = "/?login=" + current_login;
+        //var res = client.GetAsync(URI + "/Generations" + query).Result;
+        //return JsonUtility.FromJson<GenerationsResponse>(res.Content.ReadAsStringAsync().Result);
+        return new GenerationsResponse()
+        {
+            generations = new List<GenerationData>() 
+            {
+                new GenerationData() 
+                {
+                    name = "Generation1",
+                    map = "StandartMap",
+                    life_type = "RepeatSetupLifeType",
+                    feed_type = "StandartFeeding",
+                    setup_type = "Random_Generation",
+                    tick = 0.1f,
+                    last_send_num = 0,
+                    setup_json = "{\"start_cells_count\":40,\"description\":\"Some description\"}",
+                    last_cell_num = 0,
+                    description = "Test description"
+                } 
             }
         };
     }
-    #endregion
-    #region Создать генерацию
-    public class CreateGenerationData
+    public class GenerationsResponse
+    {
+        public List<GenerationData> generations;
+    }
+    public class GenerationData
     {
         public string name;
-        public string map;
-        public string life_rule;
-        public string feeding_rule;
-        public string start_options;
-        public string comments;
-        public string tick;
-        public string start_options_json;
-    }
-    public static bool CreateNewGeneration(CreateGenerationData create_generation_data)
-    {
-        return true;
-    }
-    #endregion
-    #region Получить описание генерации
-    public static GenerationDescription GetGenerationDescr(string gen_name)
-    {
-        return new GenerationDescription() { description = "Test generation" };
-    }
-    public class GenerationDescription
-    {
-        public string description;
-    }
-    #endregion
-    #region Задать новое имя и описание генерации
-    public class UpdateGenerationData
-    {
-        private string old_name;
-        private string new_name;
-        private string desctiption;
-    }
-    public static bool SetNewGenerationNameAndDescr(UpdateGenerationData update_generation_data)
-    {
-        return true;
-    }
-    #endregion
-    #region Получить информацию о генерации
-    public class GenerationData3
-    {
         public string map;
         public string life_type;
         public string feed_type;
@@ -168,10 +94,147 @@ public static class ServerSpeaker
         public long last_send_num;
         public string setup_json;
         public long last_cell_num;
+        public string description;
     }
-    public static GenerationData3 GetGenerationInfoForStart(string gen_name)
+    #endregion
+    #region Удалить генерацию
+    public static bool DeleteGeneration(string gen_name)
     {
-        return new GenerationData3() { map = "StandartMap", life_type = "RepeatStart", feed_type = "Standart", last_send_num = 0, setup_type = "", tick = 0.1f, setup_json = "" };
+        //string query = "/?login=" + current_login;
+        //var res = client.GetAsync(URI + "/Generations/" + gen_name + query).Result;
+        //if (res.IsSuccessStatusCode)
+        //    return true;
+        //else
+        //    return false;
+        return true;
+    }
+    #endregion
+    #region Обновить генерацию
+    public class UpdateGenerationData
+    {
+        private string name;
+        private string desctiption;
+        public UpdateGenerationData(string name, string desctiption)
+        {
+            this.name = name;
+            this.desctiption = desctiption;
+        }
+    }
+    public static bool UpdateGeneration(UpdateGenerationData data, string gen_name)
+    {
+        //string query = "/?login=" + current_login;
+        //var res = client.PutAsync(URI + "/Generation/" + gen_name + query, new StringContent(JsonUtility.ToJson(data))).Result;
+        //if (res.IsSuccessStatusCode)
+        //    return true;
+        //else
+        //    return false;
+        return true;
+    }
+    #endregion
+    #region Создать генерацию
+    public class CreateGenerationData
+    {
+        public string name;
+        public string map;
+        public string feed_type;
+        public string setup_type;
+        public string life_type;
+        public string description;
+        public string tick;
+        public string setup_json;
+        public CreateGenerationData(string name, string map, string feed_type, string setup_type, string life_type, string description, string tick, string setup_json)
+        {
+            this.name = name;
+            this.map = map;
+            this.feed_type = feed_type;
+            this.setup_type = setup_type;
+            this.life_type = life_type;
+            this.description = description;
+            this.tick = tick;
+            this.setup_json = setup_json;
+        }
+    }
+    public static bool CreateNewGeneration(CreateGenerationData data)
+    {
+        //string query = "/?login=" + current_login;
+        //var res = client.PutAsync(URI + "/Generation" + query, new StringContent(JsonUtility.ToJson(data))).Result;
+        //if (res.IsSuccessStatusCode)
+        //    return true;
+        //else
+        //    return false;
+        return true;
+    }
+    #endregion
+
+    #region Получить общее время генерации
+    public static GenerationTimeResponse GetGenerationTime(string gen_name)
+    {
+        //string query = "/?login=" + current_login;
+        //var res = client.GetAsync(URI + "/Generations/" + gen_name + "/Time" + query).Result;
+        //return JsonUtility.FromJson<GenerationTimeResponse>(res.Content.ReadAsStringAsync().Result);
+        return new GenerationTimeResponse()
+        {
+            time = 0
+        };
+    }
+    public class GenerationTimeResponse
+    {
+        public float time;
+    }
+    #endregion
+    #region Получить количество вымираний в генерации
+    public static GenerationLifeEndsResponse GetGenerationLifeEnds(string gen_name)
+    {
+        //string query = "/?login=" + current_login;
+        //var res = client.GetAsync(URI + "/Generations/" + gen_name + "/LifeEnds" + query).Result;
+        //return JsonUtility.FromJson<GenerationLifeEndsResponse>(res.Content.ReadAsStringAsync().Result);
+        return new GenerationLifeEndsResponse()
+        {
+            life_ends = 0
+        };
+    }
+    public class GenerationLifeEndsResponse
+    {
+        public int life_ends;
+    }
+    #endregion
+
+    #region Получить все данные для создания генерации
+    public static CreationsVariantsResponse GetCreationVariants()
+    {
+        //string query = "/?login=" + current_login;
+        //var res = client.GetAsync(URI + "/CreationVariants" + query).Result;
+        //return JsonUtility.FromJson<CreationsVariantsResponse>(res.Content.ReadAsStringAsync().Result);
+        return new CreationsVariantsResponse()
+        {
+            map_names = new List<string>() { "StandartMap" },
+            life_types = new List<string>() { "RepeatSetupLifeType" },
+            feed_types = new List<string>() { "StandartFeeding" },
+            ticks = new List<float>() { 0.1f , 0.5f },
+            setup_types = new List<SetupTypeData>()
+            {
+                new SetupTypeData()
+                {
+                    name = "Random_Generation",
+                    json = "{\"start_cells_count\":40,\"description\":\"Some description\"}"
+                }
+            }
+        };
+    }
+
+    public class CreationsVariantsResponse
+    {
+        public List<string> map_names;
+        public List<string> life_types;
+        public List<string> feed_types;
+        public List<float> ticks;
+        public List<SetupTypeData> setup_types;
+    }
+
+    public class SetupTypeData
+    {
+        public string name;
+        public string json;
     }
     #endregion
 }

@@ -1,29 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static ServerSpeaker;
 
 public class GenerationManager : MonoBehaviour
 {
-    List<Cell_WithID> cells = new List<Cell_WithID>();
+    List<Cell_WithID> cells = new();
 
-    List<long> dead_cells = new List<long>();
-    List<long> created_cells = new List<long>();
+    List<long> dead_cells = new();
+    List<long> created_cells = new();
 
     string generation_name;
-    ServerSpeaker.GenerationData3 generation_data;
+    GenerationData generation_data;
 
     float tick_counter;
 
     ILifeType lifeType;
     ISceneSetup sceneSetup;
 
-    void Start()
+    void Awake()
     {
         GenInfo go = FindObjectOfType<GenInfo>();
         generation_name = go.Generation_name;
         Destroy(go);
 
-        generation_data = ServerSpeaker.GetGenerationInfoForStart(generation_name);
+        var all_generations = GetGenerations();
+        generation_data = all_generations.generations.Where(x => x.name == generation_name).FirstOrDefault();
+
         tick_counter = generation_data.tick;
 
         SetupMap();
@@ -31,12 +34,13 @@ public class GenerationManager : MonoBehaviour
         SetupLifeType();
         if (generation_data.last_send_num == 0)
         {
-            List<Cell_WithID> new_cells = SetIds(CreateFirstCells(), ref generation_data.last_cell_num);
-            created_cells.AddRange(new_cells.Select(x => x.id));
-            cells.AddRange(new_cells);
+            SetIds_Pack(CreateFirstCells());
+        }
+        else
+        {
+            // Get cells from db and spawn them
         }
     }
-
     public void FixedUpdate()
     {
         tick_counter -= Time.fixedDeltaTime;
@@ -50,42 +54,39 @@ public class GenerationManager : MonoBehaviour
             tick_counter = generation_data.tick;
             if (cells.Count == 0)
             {
-                List<Cell_WithID> new_cells = SetIds(lifeType.CreateNewCells(), ref generation_data.last_cell_num);
-                created_cells.AddRange(new_cells.Select(x => x.id));
-                cells.AddRange(new_cells);
+                SetIds_Pack(lifeType.CreateNewCells());
             }
             PushChangesToServer();
         }
     }
-
     public void RememberDead(long id)
     {
         dead_cells.Add(id);
     }
-    public void RememberLive(long id)
+    public void CreateNewLife(long patent_id, CreateCellParameters parameters)
     {
-        created_cells.Add(id);
+        SetIds_Pack(new List<Cell>() { new CellCreator().CreateCell(parameters) } );
     }
-
-    public void PushChangesToServer()
+    void PushChangesToServer()
     {
         // Send to server
     }
-
-    public void SetupMap()
+    void SetupMap()
     {
         GameObject go = Resources.Load("Maps/" + generation_data.map) as GameObject;
         Instantiate(go);
     }
-    public void SetupFeeding()
+    void SetupFeeding()
     {
         GameObject go = Resources.Load("Feeding/" + generation_data.feed_type) as GameObject;
         Instantiate(go);
     }
-    public void SetupLifeType()
+    void SetupLifeType()
     {
         GameObject go = Resources.Load("LifeTypes/" + generation_data.life_type) as GameObject;
+        //lifeType = go.GetComponents<Component>().Where(x => x is ILifeType).Cast<ILifeType>().First();
         lifeType = go.GetComponent<ILifeType>();
+        Debug.Log(lifeType);
         Instantiate(go);
     }
     public List<Cell> CreateFirstCells()
@@ -93,34 +94,46 @@ public class GenerationManager : MonoBehaviour
         if (sceneSetup == null)
         {
             GameObject go = Resources.Load("GenerationSetups/SetupsScripts/" + generation_data.setup_type) as GameObject;
+            //Debug.Log("GenerationSetups/SetupsScripts/" + generation_data.setup_type);
             sceneSetup = Instantiate(go, gameObject.transform).GetComponent<ISceneSetup>();
             sceneSetup.FillWithJson(generation_data.setup_json);
         }
         return sceneSetup.CreateFirstCells();
     }
-    public List<Cell_WithID> SetIds(List<Cell> cells, ref long last_id)
+    void SetIds_Pack(List<Cell> cells)
     {
         List<Cell_WithID> cell_WithIDs = new List<Cell_WithID>();
         foreach (Cell cell in cells)
         {
-            cell_WithIDs.Add(new Cell_WithID(last_id, cell, RememberDead));
-            last_id++;
+            cell_WithIDs.Add(new Cell_WithID(-1, generation_data.last_cell_num, cell, RememberDead, CreateNewLife));
+            generation_data.last_cell_num++;
         }
-        return cell_WithIDs;
+        created_cells.AddRange(cell_WithIDs.Select(x => x.id));
+        this.cells.AddRange(cell_WithIDs);
     }
 }
 
-public class Cell_WithID
+class Cell_WithID
 {
     public delegate void Death(long id);
+    public delegate void BirthNew(long parent_id, CreateCellParameters cellParameters);
+    public long parent_id;
     public long id;
     public Cell cell;
     Death death;
-    public Cell_WithID(long id, Cell cell, Death death)
+    BirthNew birthNew;
+    public Cell_WithID(long parent_id, long id, Cell cell, Death death, BirthNew birthNew)
     {
+        this.parent_id = parent_id;
         this.id = id;
         this.cell = cell;
         this.death = death;
+        this.birthNew = birthNew;
+        this.cell.birth_trigger += BirthNewCell;
+    }
+    void BirthNewCell(CreateCellParameters cellParameters)
+    {
+        birthNew(id, cellParameters);
     }
     ~Cell_WithID()
     {

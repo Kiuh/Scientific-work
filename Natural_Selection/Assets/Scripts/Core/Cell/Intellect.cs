@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Intellect
 {
-    int AllNeuronsCount;
-    int AllGensCount;
+    public int AllNeuronsCount;
+    public int AllGensCount;
     int InputNeuronsCount;
     int OutputNeuronsCount;
 

@@ -10,6 +10,10 @@ public class EnergyDeathBorder : MonoBehaviour, IProperty, IValue
     {
         this.death_value = death_value;
     }
+    public void SetRandomValue()
+    {
+        Value = 0;
+    }
     public float Value { get => death_value; set => death_value = value; }
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {

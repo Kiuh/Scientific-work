@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,24 +27,23 @@ public class CreateAndGoRGeneration : MonoBehaviour, IPointerClickHandler
     TMP_Text error;
     public void OnPointerClick(PointerEventData eventData)
     {
-        ServerSpeaker.CreateGenerationData data = new()
-        {
-            name = gen_name_input.text,
-            map = maps_dd.itemText.text,
-            life_rule = life_rule_dd.itemText.text,
-            feeding_rule = feeding_rule_dd.itemText.text,
-            start_options = start_options_dd.itemText.text,
-            comments = gen_comments_input.text,
-            tick = ticks_dd.itemText.text,
-            start_options_json = RGS.current_show.GetComponent<ISetup>().GetNewInformation()
-        };
+        ServerSpeaker.CreateGenerationData data = new(
+            gen_name_input.text,
+            maps_dd.itemText.text,
+            feeding_rule_dd.itemText.text,
+            start_options_dd.itemText.text,
+            life_rule_dd.itemText.text,
+            gen_comments_input.text,
+            ticks_dd.itemText.text,
+            RGS.current_show.GetComponent<ISetup>().GetNewInformation()
+        );
         if (ServerSpeaker.CreateNewGeneration(data))
         {
             SceneManager.LoadScene("Generations");
         }
         else
         {
-
+            error.text = "Something Wrong";
         }
     }
 }

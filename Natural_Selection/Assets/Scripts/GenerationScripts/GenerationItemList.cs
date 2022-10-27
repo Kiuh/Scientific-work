@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,7 +35,10 @@ public class GenerationItemList : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        ServerSpeaker.GenerationData2 data = ServerSpeaker.GetGeneration_Map_Tick_Comments(gen_name_string);
-        InfoPanel.InitInfo(gen_name_string, data.map_name, gen_type_string, data.tick, data.comment);
+        var data = ServerSpeaker.GetGenerations().generations.Where(x => x.name == gen_name_string).FirstOrDefault();
+        InfoPanel.InitInfo(gen_name_string, data.map, gen_type_string, Convert.ToString(data.tick), data.description);
+
+        FindObjectOfType<ContonueGeneratin>().choosedgeneration = gen_name_string;
+        FindObjectOfType<DeleteChoosedGeneration>().choosedgeneration = gen_name_string;
     }
 }

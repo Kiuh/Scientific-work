@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class RegistrationButton : MonoBehaviour
+public class RegistrationButton : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
     TMP_Text login;
@@ -17,16 +15,9 @@ public class RegistrationButton : MonoBehaviour
     TMP_Text error_massage;
     public void OnPointerClick(PointerEventData eventData)
     {
-        string error = "";
-        ServerSpeaker.RegistrationData registrationData = new()
-        {
-            login = login.text,
-            email = email.text,
-            password = password.text
-        };
-        if (ServerSpeaker.Registration(registrationData , ref error))
+        if (ServerSpeaker.Registration(new ServerSpeaker.RegistrationData(login.text, email.text, password.text)))
             SceneManager.LoadScene("Login");
         else
-            error_massage.text = error;
+            error_massage.text = "Something wrong";
     }
 }

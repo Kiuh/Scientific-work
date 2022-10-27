@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FoodSmell : MonoBehaviour, IReceptor
 {
+    public int queue_number { get => queue_number; set => queue_number = value; }
+
     public FoodSmell(int queue_number)
     {
         this.queue_number = queue_number;
@@ -41,16 +43,5 @@ public class FoodSmell : MonoBehaviour, IReceptor
     void IReceptor.FindNeededPropertys(List<IProperty> properties)
     {
         vision = properties.Where(x => x is IVision).Cast<IVision>().First();
-    }
-    public int queue_number
-    {
-        get
-        {
-            return queue_number;
-        }
-        set
-        {
-            queue_number = value;
-        }
     }
 }

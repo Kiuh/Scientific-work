@@ -11,24 +11,21 @@ public class RandomGenerationSetup : MonoBehaviour, ISetup
     TMP_Text descriptions;
     public void PushInformation(string json)
     {
-        descriptions.text = JsonConvert.DeserializeObject<RandomGenerationSetupDataIn>(json).description;
+        descriptions.text = JsonConvert.DeserializeObject<RandomGenerationSetupData>(json).description;
     }
     public string GetNewInformation()
     {
-        RandomGenerationSetupDataOut rgsd = new()
+        RandomGenerationSetupData rgsd = new()
         {
-            start_cells_count = Convert.ToInt32(input_text.text)
+            start_cells_count = Convert.ToInt32(input_text.text),
+            description = descriptions.text
         };
         return JsonConvert.SerializeObject(rgsd);
     }
 }
 
-public class RandomGenerationSetupDataIn
-{
-    public string description;
-}
-
-public class RandomGenerationSetupDataOut
+public class RandomGenerationSetupData
 {
     public int start_cells_count;
+    public string description;
 }

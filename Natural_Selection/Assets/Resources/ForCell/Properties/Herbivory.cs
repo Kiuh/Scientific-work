@@ -11,6 +11,10 @@ public class Herbivory : MonoBehaviour, IProperty, IValue
         this.herbivory = herbivory;
     }
     public float Value { get => herbivory; set => herbivory = value; }
+    public void SetRandomValue()
+    {
+        Value = Random.Range(0.5f, 1f);
+    }
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {
         return;
