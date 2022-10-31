@@ -5,6 +5,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class Herbivory : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float herbivory;
     public Herbivory(float herbivory)
     {

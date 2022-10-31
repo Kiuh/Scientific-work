@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CircleVision : MonoBehaviour, IProperty , IVision
 {
+    [SerializeField]
     List<VisionRadius> vision_radius;
 
     public List<Collider2D> GetObjectsInVision(Transform transform)

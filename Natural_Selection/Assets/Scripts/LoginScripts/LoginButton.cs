@@ -11,11 +11,25 @@ public class LoginButton : MonoBehaviour, IPointerClickHandler
     TMP_Text password;
     [SerializeField]
     TMP_Text error_massage;
+
+    ServerSpeaker ss;
+
+    private void Start()
+    {
+        ss = FindObjectOfType<ServerSpeaker>();
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (ServerSpeaker.Login(new ServerSpeaker.LoginData(login.text, password.text)))
+        ss.Login(new ServerSpeaker.LoginData(login.text, password.text), Login);
+    }
+
+    public void Login(bool input)
+    {
+        if (input)
             SceneManager.LoadScene("MainMenu");
         else
             error_massage.text = "Something Wrong";
     }
+
 }

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 public class RandomGenerationSetup : MonoBehaviour, ISetup
 {
     [SerializeField]
-    TMP_Text input_text;
+    TMP_InputField input_text;
     [SerializeField]
     TMP_Text descriptions;
     public void PushInformation(string json)
@@ -15,15 +15,15 @@ public class RandomGenerationSetup : MonoBehaviour, ISetup
     }
     public string GetNewInformation()
     {
-        RandomGenerationSetupData rgsd = new()
-        {
-            start_cells_count = Convert.ToInt32(input_text.text),
-            description = descriptions.text
-        };
+        RandomGenerationSetupData rgsd = new();
+
+        rgsd.start_cells_count = int.Parse(input_text.text);
+        rgsd.description = descriptions.text;
+
         return JsonConvert.SerializeObject(rgsd);
     }
 }
-
+[Serializable]
 public class RandomGenerationSetupData
 {
     public int start_cells_count;

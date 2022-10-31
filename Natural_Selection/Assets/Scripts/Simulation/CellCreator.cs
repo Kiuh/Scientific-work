@@ -22,17 +22,25 @@ public class CellCreator
     }
     private Cell Random_Mode(CreateCellParameters parameters)
     {
+        // Набрать самому
+        List<Type> types_empty = new() { typeof(Moving), typeof(FoodSmell), typeof(CircleVision),
+            typeof(DeathInstinct), typeof(Heart), typeof(Reproduction)};
+        /*
         List<Type> types_empty = parameters.parameters
             .Where(x => x.value == null)
             .Select(x => Type.GetType(x.name))
             .ToList();
-
+        */
+        List<Type> types_with_value = new() { typeof(ConsumtionEnergy), typeof(DublicateEnergyBorder), typeof(Energy),
+            typeof(EnergyDeathBorder), typeof(Herbivory), typeof(MovmentSpeed), typeof(PositionX),
+            typeof(PositionY), typeof(VisionRadius)};
+        /*
         List<Type> types_with_value = parameters.parameters
             .Where(x => x.value != null)
             .Select(x => Type.GetType(x.name))
             .ToList();
-
-        List<Type> all_types = new List<Type>();
+        */
+        List <Type> all_types = new List<Type>();
         all_types.AddRange(types_empty);
         all_types.AddRange(types_with_value);
 
@@ -46,8 +54,20 @@ public class CellCreator
             IValue value_class = cell_go.GetComponent(types_with_value[i]) as IValue;
             value_class.SetRandomValue();
         }
-        Cell cell = (cell_go.GetComponent(typeof(Cell)) as Cell);
-        cell.InitializeCell(parameters.intellect.AllNeuronsCount, parameters.intellect.AllGensCount);
+        int k = 0;
+        foreach(var item in cell_go.GetComponents<Component>().ToList().Where(x => x is IAction).Cast<IAction>())
+        {
+            item.queue_number = k;
+            k++;
+        }
+        k = 0;
+        foreach (var item in cell_go.GetComponents<Component>().ToList().Where(x => x is IReceptor).Cast<IReceptor>())
+        {
+            item.queue_number = k;
+            k++;
+        }
+        Cell cell = cell_go.GetComponent(typeof(Cell)) as Cell;
+        cell.InitializeCell(15, 15);
         GameObject.Instantiate(cell_go, parameters.position, new Quaternion());
         return cell;
     }

@@ -22,20 +22,42 @@ public class GenerationItemList : MonoBehaviour, IPointerClickHandler
     string gen_name_string;
     string gen_type_string;
 
-    public void InitListItem(string name, string time, string count, string type)
+    ServerSpeaker ss;
+
+    private void Start()
+    {
+        ss = FindObjectOfType<ServerSpeaker>();
+    }
+
+    public void InitListItem(string name, string type)
     {
         gen_name_string = name;
         gen_type_string = type;
 
         gen_name.text = name;
-        gen_time.text = time;
+        
         gen_type.text = type;
+        
+    }
+
+    public void SetTime(string time)
+    {
+        gen_time.text = time;
+    }
+
+    public void Setcount(string count)
+    {
         end_count.text = count;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        var data = ServerSpeaker.GetGenerations().generations.Where(x => x.name == gen_name_string).FirstOrDefault();
+        ss.GetGenerations(Click);
+    }
+
+    public void Click(ServerSpeaker.GenerationsResponse Data)
+    {
+        var data = Data.generations.Where(x => x.name == gen_name_string).FirstOrDefault();
         InfoPanel.InitInfo(gen_name_string, data.map, gen_type_string, Convert.ToString(data.tick), data.description);
 
         FindObjectOfType<ContonueGeneratin>().choosedgeneration = gen_name_string;

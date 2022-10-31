@@ -27,13 +27,20 @@ public class SetupRGenStart : MonoBehaviour
 
     public GameObject current_show;
 
+    ServerSpeaker ss;
+
     public void Start()
     {
-        var all_data = ServerSpeaker.GetCreationVariants();
+        ss = FindObjectOfType<ServerSpeaker>();
+        ss.GetCreationVariants(Start_WW);
+    }
+
+    public void Start_WW(ServerSpeaker.CreationsVariantsResponse all_data)
+    {
         List<string> maps = all_data.map_names;
         List<string> life_rules = all_data.life_types;
         List<string> feeding_rules = all_data.feed_types;
-        List<string> ticks = all_data.ticks.Select((x) => Convert.ToString(x)).ToList();
+        List<string> ticks = all_data.ticks.Select((x) => Convert.ToString(x).Replace(',', '.')).ToList();
 
         maps_dd.ClearOptions();
         maps_dd.AddOptions(maps);
@@ -55,7 +62,7 @@ public class SetupRGenStart : MonoBehaviour
             shows.Add(() => {
                 current_show = Instantiate(go, info_rt);
                 current_show.GetComponent<ISetup>().PushInformation(item.json);
-                }
+            }
             );
         }
         shows[0]();

@@ -19,8 +19,8 @@ public class Intellect
     #endregion
     #region Constants
     // Gen borders
-    const float LeftGenBorder = -1;
-    const float RightGenBorder = 1;
+    const float LeftGenBorder = -2;
+    const float RightGenBorder = 2;
     // Bias borders
     const float LeftBiasBorder = -0.05f;
     const float RightBiasBorder = 0.05f;
@@ -201,6 +201,16 @@ public class Intellect
         neuron.Container = 2 / (1 + Mathf.Exp(-2 * neuron.Container)) - 1;
     }
     #endregion
+    public ServerSpeaker.IntellectData IntellectData
+    {
+        get
+        {
+            List<ServerSpeaker.NeuronData> neuronDatas = neurons.Select(x => new ServerSpeaker.NeuronData(x.Bias)).ToList();
+            List<ServerSpeaker.GenData> genDatas = gens.Select(x => new ServerSpeaker.GenData(x.ElementaryNeuronNumberInList, x.FinitieNeuronNumberInList, x.Weight)).ToList();
+            ServerSpeaker.IntellectData data = new(AllNeuronsCount, AllGensCount, InputNeuronsCount, OutputNeuronsCount, neuronDatas, genDatas);
+            return data;
+        }
+    }
 }
 public class Neuron
 {

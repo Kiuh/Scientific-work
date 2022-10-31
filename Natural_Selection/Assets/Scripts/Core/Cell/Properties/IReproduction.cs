@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal interface IReproduction
+public interface IReproduction
 {
-    public void SetBirthDelegate(Cell.BirthNew birthNew);
+    public void SetBirthDelegate(Action<CreateCellParameters> birthNew);
 }
 

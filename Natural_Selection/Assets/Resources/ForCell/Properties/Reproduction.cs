@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,11 +6,14 @@ using UnityEngine;
 
 public class Reproduction : MonoBehaviour, IProperty, IReproduction
 {
+    [SerializeField]
     DublicateEnergyBorder dublicateEnergy;
+    [SerializeField]
     Energy energy;
-
+    [SerializeField]
     CreateCellParameters cellParameters;
-    Cell.BirthNew birthNew;
+    [SerializeField]
+    Action<CreateCellParameters> birthNew;
 
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {
@@ -42,7 +46,7 @@ public class Reproduction : MonoBehaviour, IProperty, IReproduction
         }
     }
 
-    public void SetBirthDelegate(Cell.BirthNew birthNew)
+    public void SetBirthDelegate(Action<CreateCellParameters> birthNew)
     {
         this.birthNew = birthNew;
     }

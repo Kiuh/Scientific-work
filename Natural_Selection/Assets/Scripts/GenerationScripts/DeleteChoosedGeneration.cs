@@ -12,17 +12,36 @@ public class DeleteChoosedGeneration : MonoBehaviour, IPointerClickHandler
     TMP_Text massage;
     [SerializeField]
     GenerationMenuStarter menuStarter;
+
+    ServerSpeaker ss;
+
+    public void Start()
+    {
+        ss = FindObjectOfType<ServerSpeaker>();
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (choosedgeneration != "")
         {
-            ServerSpeaker.DeleteGeneration(choosedgeneration);
+            ss.DeleteGeneration(choosedgeneration, Reqest);
+        }
+        else
+        {
+            massage.text = "Выберете генерацию.";
+        }
+    }
+
+    void Reqest(bool value)
+    {
+        if (value)
+        {
             menuStarter.DeleteAllItemsInContent();
             menuStarter.FillListWithItems();
         }
         else
         {
-            massage.text = "Выберете генерацию.";
+            massage.text = "Не удалось удалить.";
         }
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class DeathInstinct : MonoBehaviour, IProperty
 {
+    [SerializeField]
     EnergyDeathBorder deathBorder;
+    [SerializeField]
     Energy energy;
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {

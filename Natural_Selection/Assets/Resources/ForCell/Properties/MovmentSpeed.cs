@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MovmentSpeed : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float speed;
     public MovmentSpeed(float speed)
     {

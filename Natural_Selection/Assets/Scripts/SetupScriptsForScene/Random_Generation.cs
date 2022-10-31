@@ -6,14 +6,11 @@ using UnityEngine;
 
 public class Random_Generation : MonoBehaviour, ISceneSetup
 {
-    RandomGenerationSetupData randomGenerationSetupData;
+    public RandomGenerationSetupData randomGenerationSetupData;
     IMap map;
-    public void Reset()
-    {
-        map = FindObjectsOfType<Component>().ToList().Where(x => x is IMap).Cast<IMap>().First();
-    }
     public List<Cell> CreateFirstCells()
     {
+        map = FindObjectsOfType<Component>().ToList().Where(x => x is IMap).Cast<IMap>().First();
         List<Cell> new_cells = new List<Cell>();
         CreateCellParameters cellParameters = new(
             map.GetRandomPositionInArea(),
@@ -21,10 +18,13 @@ public class Random_Generation : MonoBehaviour, ISceneSetup
             null,
             null
         );
-
+        // Костыль
+        randomGenerationSetupData = new();
+        randomGenerationSetupData.start_cells_count = 1;
         for (int i = 0; i < randomGenerationSetupData.start_cells_count; i++)
         {
             new_cells.Add(new CellCreator().CreateCell(cellParameters));
+            cellParameters.position = map.GetRandomPositionInArea();
         }
         return new_cells;
     }

@@ -6,9 +6,17 @@ using UnityEngine;
 
 public class Moving : MonoBehaviour, IAction
 {
+    [SerializeField]
     MovmentSpeed movmentSpeed;
-    Rigidbody rb;
-    public int queue_number { get => queue_number; set => queue_number = value; }
+    [SerializeField]
+    Rigidbody2D rb;
+    [SerializeField]
+    public int queue_number { get; set; }
+
+    public void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     public Moving(int queue_number)
     {
@@ -19,7 +27,7 @@ public class Moving : MonoBehaviour, IAction
     {
         Vector2 direction = new Vector2(floats[0], floats[1]);
         direction.Normalize();
-        rb.AddForce(floats[2] * movmentSpeed.Value * direction, ForceMode.Force);
+        rb.AddForce(floats[2] * movmentSpeed.Value * direction, ForceMode2D.Force);
     }
 
     public int GetInputCount()

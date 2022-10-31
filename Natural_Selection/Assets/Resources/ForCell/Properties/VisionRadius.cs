@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class VisionRadius : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float radius;
     public VisionRadius(float radius)
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal interface IReceptor
+public interface IReceptor
 {
-    public int queue_number { get; }
+    public int queue_number { get; set; }
     public List<float> GetInformation();
     public void FindNeededPropertys(List<IProperty> properties);
     public int GetOutputCount();

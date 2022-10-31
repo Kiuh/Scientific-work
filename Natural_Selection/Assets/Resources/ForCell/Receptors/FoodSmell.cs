@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class FoodSmell : MonoBehaviour, IReceptor
 {
-    public int queue_number { get => queue_number; set => queue_number = value; }
+    [SerializeField]
+    public int queue_number { get; set; }
 
     public FoodSmell(int queue_number)
     {
         this.queue_number = queue_number;
     }
-
+    [SerializeField]
     IVision vision;
     public List<float> GetInformation()
     {
@@ -43,5 +44,6 @@ public class FoodSmell : MonoBehaviour, IReceptor
     void IReceptor.FindNeededPropertys(List<IProperty> properties)
     {
         vision = properties.Where(x => x is IVision).Cast<IVision>().First();
+        queue_number = 0;
     }
 }

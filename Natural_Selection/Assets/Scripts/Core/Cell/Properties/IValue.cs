@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal interface IValue
+public interface IValue
 {
     public float Value { get; set; }
     public void SetRandomValue();

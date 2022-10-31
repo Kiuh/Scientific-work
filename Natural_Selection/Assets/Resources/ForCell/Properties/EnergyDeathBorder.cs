@@ -5,6 +5,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnergyDeathBorder : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float death_value;
     public EnergyDeathBorder(float death_value)
     {

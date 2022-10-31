@@ -1,19 +1,22 @@
-using JetBrains.Annotations;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Cell : MonoBehaviour, IProperty
 {
-    public delegate void BirthNew(CreateCellParameters cellParameters);
-
-    List<IReceptor> receptors = new List<IReceptor>();
-    List<IProperty> properties = new List<IProperty>();
-    List<IAction> actions = new List<IAction>();
-
+    [SerializeField]
+    List<IReceptor> receptors;
+    [SerializeField]
+    List<IProperty> properties;
+    [SerializeField]
+    List<IAction> actions;
+    [SerializeField]
     Intellect intellect;
-    public BirthNew birth_trigger;
+
+    public Action<CreateCellParameters> birth_trigger;
+
+    public bool cell_created = false;
 
     void SetComponents()
     {
@@ -30,6 +33,7 @@ public class Cell : MonoBehaviour, IProperty
         SetComponents();
         this.intellect = new Intellect(intellect);
         SetOrderAndAnother();
+
     }
     public void InitializeCell(int neurons, int gens)
     {
@@ -43,21 +47,26 @@ public class Cell : MonoBehaviour, IProperty
     void SetOrderAndAnother()
     {
         // Maybe wrong
-        receptors.Sort((x1, x2) => x1.queue_number - x2.queue_number);
-        actions.Sort((x1, x2) => x1.queue_number - x2.queue_number);
+        //receptors.Sort((x1, x2) => x1.queue_number - x2.queue_number);
+        //actions.Sort((x1, x2) => x1.queue_number - x2.queue_number);
 
         receptors.Where(x => x is IReproduction)
             .Cast<IReproduction>().ToList().ForEach(x => x.SetBirthDelegate(birth_trigger));
+
+        cell_created = true;
     }
 
     public void LiveMoment()
     {
+        if (!cell_created)
+            return;
+
         List<float> info = new List<float>();
         foreach (var item in receptors)
             info.AddRange(item.GetInformation());
-        
+        Debug.Log(info);
         List<float> great_info = intellect.Think(info);
-
+        Debug.Log(great_info);
         foreach (var item in actions)
             item.DoAction(great_info);
     }
@@ -73,4 +82,27 @@ public class Cell : MonoBehaviour, IProperty
     }
 
     public Intellect Intellect { get => intellect; }
+
+    public List<ServerSpeaker.ModuleData> modulesData {
+        get {
+            List<ServerSpeaker.ModuleData> list = new();
+            foreach(var item in gameObject.GetComponents<Component>().Where(x => x is IReceptor || x is IAction || x is IProperty)){
+                list.Add(new ServerSpeaker.ModuleData(item.GetType().Name, item is IValue ? (item as IValue).Value : null));
+            }
+            return list;
+        } 
+    }
+
+    public List<ServerSpeaker.ModuleData> GetPositionsData()
+    {
+        List<ServerSpeaker.ModuleData> list = new();
+
+        PositionX posx = gameObject.GetComponents<Component>().ToList().Find((x) => x is PositionX) as PositionX;
+        list.Add(new ServerSpeaker.ModuleData(posx.GetType().Name, (posx as IValue).Value));
+
+        PositionY posy = gameObject.GetComponents<Component>().ToList().Find((x) => x is PositionY) as PositionY;
+        list.Add(new ServerSpeaker.ModuleData(posy.GetType().Name, (posy as IValue).Value));
+
+        return list;
+    }
 }

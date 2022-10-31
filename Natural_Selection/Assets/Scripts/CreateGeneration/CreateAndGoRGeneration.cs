@@ -25,25 +25,38 @@ public class CreateAndGoRGeneration : MonoBehaviour, IPointerClickHandler
 
     [SerializeField]
     TMP_Text error;
+
+    ServerSpeaker ss;
+
+    public void Start()
+    {
+        ss = FindObjectOfType<ServerSpeaker>();
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         ServerSpeaker.CreateGenerationData data = new(
             gen_name_input.text,
-            maps_dd.itemText.text,
-            feeding_rule_dd.itemText.text,
-            start_options_dd.itemText.text,
-            life_rule_dd.itemText.text,
+            maps_dd.options[maps_dd.value].text,
+            feeding_rule_dd.options[maps_dd.value].text,
+            start_options_dd.options[maps_dd.value].text,
+            life_rule_dd.options[maps_dd.value].text,
             gen_comments_input.text,
-            ticks_dd.itemText.text,
+            ticks_dd.options[maps_dd.value].text,
             RGS.current_show.GetComponent<ISetup>().GetNewInformation()
         );
-        if (ServerSpeaker.CreateNewGeneration(data))
+        ss.CreateNewGeneration(data, OnPointerClick_Continue);
+    }
+
+    public void OnPointerClick_Continue(bool value)
+    {
+        if (value)
         {
             SceneManager.LoadScene("Generations");
         }
         else
         {
-            error.text = "Something Wrong";
+            error.text = "Fail to create generation";
         }
     }
 }

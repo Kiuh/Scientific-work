@@ -5,6 +5,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class DublicateEnergyBorder : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float dublicate_value;
     public DublicateEnergyBorder(float dublicate_value)
     {
@@ -18,6 +19,6 @@ public class DublicateEnergyBorder : MonoBehaviour, IProperty, IValue
 
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {
-        throw new System.NotImplementedException();
+        return;
     }
 }

@@ -1,13 +1,21 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
-public static class ServerSpeaker
+public class ServerSpeaker : MonoBehaviour
 {
-    static string URI = "";
-    static string current_login = "";
-    static HttpClient client = new HttpClient();
-    
+    string URI = "http://localhost:27503";
+    string current_login = "";
+    void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     #region Вход в аккаунт
+    [Serializable]
     public class LoginData
     {
         public string login;
@@ -18,18 +26,27 @@ public static class ServerSpeaker
             this.password = password;
         }
     }
-    public static bool Login(LoginData data)
+
+    public void Login(LoginData data, Action<bool> action)
     {
-        //current_login = data.login;
-        //var res = client.PatchAsync(URI + "/User", new StringContent(JsonUtility.ToJson(data))).Result;
-        //if (res.IsSuccessStatusCode) 
-        //    return true;
-        //else
-        //    return false;
-        return true;
+        StartCoroutine(LoginSmart(data, action));
+    }
+    IEnumerator LoginSmart(LoginData data, Action<bool> action)
+    {
+        current_login = data.login;
+
+        UnityWebRequest webRequest = new(URI + "/User", "POST");
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
     }
     #endregion
     #region Регестрация
+    [Serializable]
     public class RegistrationData
     {
         public string login;
@@ -42,47 +59,46 @@ public static class ServerSpeaker
             this.password = password;
         }
     }
-    public static bool Registration(RegistrationData data)
+    public void Registration(RegistrationData data, Action<bool> action)
     {
-        //var res = client.PutAsync(URI + "/User", new StringContent(JsonUtility.ToJson(data))).Result;
-        //if (res.IsSuccessStatusCode)
-        //    return true;
-        //else
-        //    return false;
-        return true;
+        StartCoroutine(RegistrationSmart(data, action));
+    }
+    IEnumerator RegistrationSmart(RegistrationData data, Action<bool> action)
+    {
+        UnityWebRequest webRequest = new(URI + "/User", "PUT");
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
     }
     #endregion
-    
+
     #region Получить все генерации (с информацией)
-    public static GenerationsResponse GetGenerations()
+    public void GetGenerations(Action<GenerationsResponse> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.GetAsync(URI + "/Generations" + query).Result;
-        //return JsonUtility.FromJson<GenerationsResponse>(res.Content.ReadAsStringAsync().Result);
-        return new GenerationsResponse()
-        {
-            generations = new List<GenerationData>() 
-            {
-                new GenerationData() 
-                {
-                    name = "Generation1",
-                    map = "StandartMap",
-                    life_type = "RepeatSetupLifeType",
-                    feed_type = "StandartFeeding",
-                    setup_type = "Random_Generation",
-                    tick = 0.1f,
-                    last_send_num = 0,
-                    setup_json = "{\"start_cells_count\":40,\"description\":\"Some description\"}",
-                    last_cell_num = 0,
-                    description = "Test description"
-                } 
-            }
-        };
+        StartCoroutine(GetGenerationsSmart(action));
     }
+    IEnumerator GetGenerationsSmart(Action<GenerationsResponse> action)
+    {
+        string query = "?login=" + current_login;
+
+        UnityWebRequest webRequest = new(URI + "/Generations" + query, "GET");
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return webRequest.SendWebRequest();
+
+        action(JsonUtility.FromJson<GenerationsResponse>(webRequest.downloadHandler.text));
+        webRequest.Dispose();
+    }
+    [Serializable]
     public class GenerationsResponse
     {
         public List<GenerationData> generations;
     }
+    [Serializable]
     public class GenerationData
     {
         public string name;
@@ -98,15 +114,19 @@ public static class ServerSpeaker
     }
     #endregion
     #region Удалить генерацию
-    public static bool DeleteGeneration(string gen_name)
+    public void DeleteGeneration(string gen_name, Action<bool> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.GetAsync(URI + "/Generations/" + gen_name + query).Result;
-        //if (res.IsSuccessStatusCode)
-        //    return true;
-        //else
-        //    return false;
-        return true;
+        StartCoroutine(DeleteGenerationSmart(gen_name, action));
+    }
+    IEnumerator DeleteGenerationSmart(string gen_name, Action<bool> action)
+    {
+        string query = "?login=" + current_login;
+        UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + query, "DELETE");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
     }
     #endregion
     #region Обновить генерацию
@@ -120,15 +140,22 @@ public static class ServerSpeaker
             this.desctiption = desctiption;
         }
     }
-    public static bool UpdateGeneration(UpdateGenerationData data, string gen_name)
+    public void UpdateGeneration(UpdateGenerationData data, string gen_name, Action<bool> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.PutAsync(URI + "/Generation/" + gen_name + query, new StringContent(JsonUtility.ToJson(data))).Result;
-        //if (res.IsSuccessStatusCode)
-        //    return true;
-        //else
-        //    return false;
-        return true;
+        StartCoroutine(UpdateGenerationSmart(data, gen_name, action));
+    }
+    IEnumerator UpdateGenerationSmart(UpdateGenerationData data, string gen_name, Action<bool> action)
+    {
+        string query = "?login=" + current_login;
+
+        UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + query, "PUT");
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
     }
     #endregion
     #region Создать генерацию
@@ -154,28 +181,45 @@ public static class ServerSpeaker
             this.setup_json = setup_json;
         }
     }
-    public static bool CreateNewGeneration(CreateGenerationData data)
+    public void CreateNewGeneration(CreateGenerationData data, Action<bool> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.PutAsync(URI + "/Generation" + query, new StringContent(JsonUtility.ToJson(data))).Result;
-        //if (res.IsSuccessStatusCode)
-        //    return true;
-        //else
-        //    return false;
-        return true;
+        StartCoroutine(CreateNewGenerationSmart(data, action));
+    }
+    IEnumerator CreateNewGenerationSmart(CreateGenerationData data, Action<bool> action)
+    {
+        string str = URI + "/Generation" + $"?login={current_login}";
+        UnityWebRequest webRequest = new(str, "PUT");
+
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
     }
     #endregion
 
     #region Получить общее время генерации
-    public static GenerationTimeResponse GetGenerationTime(string gen_name)
+    public void GetGenerationTime(string gen_name, Action<GenerationTimeResponse> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.GetAsync(URI + "/Generations/" + gen_name + "/Time" + query).Result;
-        //return JsonUtility.FromJson<GenerationTimeResponse>(res.Content.ReadAsStringAsync().Result);
-        return new GenerationTimeResponse()
-        {
-            time = 0
-        };
+        StartCoroutine(GetGenerationTimeSmart(gen_name, action));
+    }
+    IEnumerator GetGenerationTimeSmart(string gen_name, Action<GenerationTimeResponse> action)
+    {
+        string query = "?login=" + current_login;
+
+        string str = URI + "/Generation/" + gen_name + "/Time" + query;
+
+        UnityWebRequest webRequest = new(str, "GET");
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return webRequest.SendWebRequest();
+
+        //action(JsonUtility.FromJson<GenerationTimeResponse>(webRequest.downloadHandler.text));
+        action(new GenerationTimeResponse() { time = 0 });
+        webRequest.Dispose();
     }
     public class GenerationTimeResponse
     {
@@ -183,15 +227,22 @@ public static class ServerSpeaker
     }
     #endregion
     #region Получить количество вымираний в генерации
-    public static GenerationLifeEndsResponse GetGenerationLifeEnds(string gen_name)
+    public void GetGenerationLifeEnds(string gen_name, Action<GenerationLifeEndsResponse> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.GetAsync(URI + "/Generations/" + gen_name + "/LifeEnds" + query).Result;
-        //return JsonUtility.FromJson<GenerationLifeEndsResponse>(res.Content.ReadAsStringAsync().Result);
-        return new GenerationLifeEndsResponse()
-        {
-            life_ends = 0
-        };
+        StartCoroutine(GetGenerationLifeEndsSmart(gen_name, action));
+    }
+    IEnumerator GetGenerationLifeEndsSmart(string gen_name, Action<GenerationLifeEndsResponse> action)
+    {
+        string query = "?login=" + current_login;
+
+        UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + "/LifeEnds" + query, "GET");
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return webRequest.SendWebRequest();
+
+        //action(JsonUtility.FromJson<GenerationLifeEndsResponse>(webRequest.downloadHandler.text));
+        action(new GenerationLifeEndsResponse() { life_ends = 0 });
+        webRequest.Dispose();
     }
     public class GenerationLifeEndsResponse
     {
@@ -200,28 +251,21 @@ public static class ServerSpeaker
     #endregion
 
     #region Получить все данные для создания генерации
-    public static CreationsVariantsResponse GetCreationVariants()
+    public void GetCreationVariants(Action<CreationsVariantsResponse> action)
     {
-        //string query = "/?login=" + current_login;
-        //var res = client.GetAsync(URI + "/CreationVariants" + query).Result;
-        //return JsonUtility.FromJson<CreationsVariantsResponse>(res.Content.ReadAsStringAsync().Result);
-        return new CreationsVariantsResponse()
-        {
-            map_names = new List<string>() { "StandartMap" },
-            life_types = new List<string>() { "RepeatSetupLifeType" },
-            feed_types = new List<string>() { "StandartFeeding" },
-            ticks = new List<float>() { 0.1f , 0.5f },
-            setup_types = new List<SetupTypeData>()
-            {
-                new SetupTypeData()
-                {
-                    name = "Random_Generation",
-                    json = "{\"start_cells_count\":40,\"description\":\"Some description\"}"
-                }
-            }
-        };
+        StartCoroutine(GetCreationVariantsSmart(action));
     }
+    IEnumerator GetCreationVariantsSmart(Action<CreationsVariantsResponse> action)
+    {
+        UnityWebRequest webRequest = new(URI + "/CreationVariants", "GET");
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
 
+        yield return webRequest.SendWebRequest();
+
+        action(JsonUtility.FromJson<CreationsVariantsResponse>(webRequest.downloadHandler.text));
+        webRequest.Dispose();
+    }
+    [Serializable]
     public class CreationsVariantsResponse
     {
         public List<string> map_names;
@@ -230,11 +274,154 @@ public static class ServerSpeaker
         public List<float> ticks;
         public List<SetupTypeData> setup_types;
     }
-
+    [Serializable]
     public class SetupTypeData
     {
         public string name;
         public string json;
+    }
+    #endregion
+
+    #region Получить все клетки в конкретный тик
+    public void GetCellsFromTick(string gen_name, long send_id, Action<CellsFromTickResponse> action)
+    {
+        StartCoroutine(GetCellsFromTickSmart(gen_name, send_id, action));
+    }
+
+    IEnumerator GetCellsFromTickSmart(string gen_name, long send_id, Action<CellsFromTickResponse> action)
+    {
+        string query = "?login=" + current_login;
+
+        UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + "/Cells/" + send_id + query, "GET");
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return webRequest.SendWebRequest();
+
+        action(JsonUtility.FromJson<CellsFromTickResponse>(webRequest.downloadHandler.text));
+        webRequest.Dispose();
+    }
+
+    public class CellsFromTickResponse
+    {
+        public List<CellData> cells;
+    }
+
+    #endregion
+    #region Запомнить состояние клеток в генерации на тике
+    [Serializable]
+    public class SendTickChangesData
+    {
+        public List<CellData> added;
+        public List<ModuleDataWithId> changes;
+        public List<long> deleted;
+        public SendTickChangesData(List<CellData> added, List<ModuleDataWithId> changes, List<long> deleted)
+        {
+            this.added = added;
+            this.changes = changes;
+            this.deleted = deleted;
+        }
+    }
+    [Serializable]
+    public class ModuleDataWithId
+    {
+        public long cell_id;
+        public string name;
+        public float? value;
+        public ModuleDataWithId(long cell_id, string name, float? value)
+        {
+            this.cell_id = cell_id;
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    public void SendTickChanges(string gen_name, long send_id, SendTickChangesData data, Action<bool> action)
+    {
+        StartCoroutine(SendTickChangesSmart(gen_name, send_id, data, action));
+    }
+
+    IEnumerator SendTickChangesSmart(string gen_name, long send_id, SendTickChangesData data, Action<bool> action)
+    {
+        string query = "?login=" + current_login;
+
+        UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + "/Cells/" + send_id + query, "PATCH");
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        yield return webRequest.SendWebRequest();
+
+        action(webRequest.responseCode == 200);
+        webRequest.Dispose();
+    }
+    #endregion
+
+    #region Класс клетки
+    [Serializable]
+    public class CellData
+    {
+        public long parent_id;
+        public long own_id;
+        List<ModuleData> modules;
+        IntellectData intellect;
+        public CellData(long parent_id, long own_id, List<ModuleData> modules, IntellectData intellect)
+        {
+            this.parent_id = parent_id;
+            this.own_id = own_id;
+            this.modules = modules;
+            this.intellect = intellect;
+        }
+    }
+    [Serializable]
+    public class ModuleData
+    {
+        public string name;
+        public float? value; 
+        public ModuleData(string name, float? value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+    }
+    [Serializable]
+    public class IntellectData
+    {
+        public int neurons_count;
+        public int gens_count;
+        public int input_neurons_count;
+        public int output_neurons_count;
+        List<NeuronData> neurons;
+        List<GenData> gens;
+        public IntellectData(int neurons_count, int gens_count, int input_neurons_count, int output_neurons_count, List<NeuronData> neurons, List<GenData> gens)
+        {
+            this.neurons_count = neurons_count;
+            this.gens_count = gens_count;
+            this.input_neurons_count = input_neurons_count;
+            this.output_neurons_count = output_neurons_count;
+            this.neurons = neurons;
+            this.gens = gens;
+        }
+    }
+    [Serializable]
+    public class NeuronData
+    {
+        public float bias;
+        public NeuronData(float bias)
+        {
+            this.bias = bias;
+        }
+    }
+    [Serializable]
+    public class GenData
+    {
+        public int el_neur_number;
+        public int fin_neur_number;
+        public float weight;
+        public GenData(int el_neur_number, int fin_neur_number, float weight)
+        {
+            this.el_neur_number = el_neur_number;
+            this.fin_neur_number = fin_neur_number;
+            this.weight = weight;
+        }
     }
     #endregion
 }

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Energy : MonoBehaviour, IProperty
+public class Energy : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float energy;
     public Energy(float energy)
     {

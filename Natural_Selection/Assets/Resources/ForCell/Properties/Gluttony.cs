@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Gluttony : MonoBehaviour, IProperty
 {
+    [SerializeField]
     Energy energy;
+    [SerializeField]
     Herbivory herbivory;
     void IProperty.FindNeededPropertys(List<IProperty> properties)
     {

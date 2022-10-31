@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ConsumtionEnergy : MonoBehaviour, IProperty, IValue
 {
+    [SerializeField]
     float energy;
     public ConsumtionEnergy(float energy)
     {
