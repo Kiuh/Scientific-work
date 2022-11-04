@@ -3,96 +3,64 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public enum CellCreateMode
+public static class CellCreator
 {
-    Random = 0,
-    FullCopy
-}
-public class CellCreator
-{
-    public Cell CreateCell(CreateCellParameters parameters)
+    public static Component CreateStandartCell(Vector2 position, Action<Component> death, Action<Component> birth)
     {
-        return parameters.mode switch
-        {
-            CellCreateMode.Random => Random_Mode(parameters),
-            CellCreateMode.FullCopy => FullCopy_Mode(parameters),
-            _ => null,
-        };
-    }
-    private Cell Random_Mode(CreateCellParameters parameters)
-    {
-        // Набрать самому
         List<Type> types_empty = new() { typeof(Moving), typeof(FoodSmell), typeof(CircleVision),
-            typeof(DeathInstinct), typeof(Heart), typeof(Reproduction)};
-        /*
-        List<Type> types_empty = parameters.parameters
-            .Where(x => x.value == null)
-            .Select(x => Type.GetType(x.name))
-            .ToList();
-        */
+            typeof(DeathInstinct), typeof(Heart), typeof(Reproduction), typeof(Gluttony), typeof(OwnID), typeof(ParentID)
+        };
+
         List<Type> types_with_value = new() { typeof(ConsumtionEnergy), typeof(DublicateEnergyBorder), typeof(Energy),
             typeof(EnergyDeathBorder), typeof(Herbivory), typeof(MovmentSpeed), typeof(PositionX),
-            typeof(PositionY), typeof(VisionRadius)};
-        /*
-        List<Type> types_with_value = parameters.parameters
-            .Where(x => x.value != null)
-            .Select(x => Type.GetType(x.name))
-            .ToList();
-        */
-        List <Type> all_types = new List<Type>();
+            typeof(PositionY), typeof(VisionRadius)
+        };
+
+        List<Type> all_types = new();
         all_types.AddRange(types_empty);
         all_types.AddRange(types_with_value);
 
-        GameObject cell_go = Resources.Load("CellPrefab/Cell") as GameObject;
+        GameObject cell_go = GameObject.Instantiate(Resources.Load("CellPrefab/Cell") as GameObject, position, new Quaternion());
+
         foreach (var item in all_types)
-        {
             cell_go.AddComponent(item);
-        }
+
         for (int i = 0; i < types_with_value.Count; i++)
         {
             IValue value_class = cell_go.GetComponent(types_with_value[i]) as IValue;
             value_class.SetRandomValue();
         }
-        int k = 0;
-        foreach(var item in cell_go.GetComponents<Component>().ToList().Where(x => x is IAction).Cast<IAction>())
+        int k = 0; int input_N = 0; int output_N = 0;
+        foreach (var item in cell_go.GetComponents<Component>().ToList().FindAll((x) => x is IAction))
         {
-            item.queue_number = k;
+            (item as IAction).queue_number = k;
+            output_N += (item as IAction).GetInputCount();
             k++;
         }
         k = 0;
-        foreach (var item in cell_go.GetComponents<Component>().ToList().Where(x => x is IReceptor).Cast<IReceptor>())
+        foreach (var item in cell_go.GetComponents<Component>().ToList().FindAll((x) => x is IReceptor))
         {
-            item.queue_number = k;
+            (item as IReceptor).queue_number = k;
+            input_N += (item as IReceptor).GetOutputCount();
             k++;
         }
-        Cell cell = cell_go.GetComponent(typeof(Cell)) as Cell;
-        cell.InitializeCell(15, 15);
-        GameObject.Instantiate(cell_go, parameters.position, new Quaternion());
+        (cell_go.GetComponents<Component>().ToList().Find((x) => x is ParentID) as ParentID).ID = -1;
+        Component cell = cell_go.GetComponents<Component>().Where(x => x is Cell).First();
+        (cell as Cell).InitializeCell(new Intellect(input_N, 0, output_N, 6), death, birth, all_types.Select(x => x.Name).ToList());
         return cell;
     }
-    private Cell FullCopy_Mode(CreateCellParameters parameters)
+    public static Component CreateChild(Vector2 position, Component cell)
     {
-        List<Type> types_empty = parameters.parameters
-            .Where(x => x.value == null)
-            .Select(x => Type.GetType(x.name))
-            .ToList();
+        List<Type> all_types = (cell as Cell).AllModules.Select(x => Type.GetType(x)).ToList();
 
-        List<Type> types_with_value = parameters.parameters
-            .Where(x => x.value != null)
-            .Select(x => Type.GetType(x.name))
-            .ToList();
+        List<Type> types_with_value = all_types.Where(x => x.GetInterface(typeof(IValue).Name) != null).ToList();
 
-        List<float?> values = parameters.parameters
-            .Where(x => x.value != null)
-            .Select(x => x.value)
-            .ToList();
+        List<float?> values = new();
+        types_with_value.ForEach(x => values.Add(((cell as Cell).Properties.Find((y) => y.GetType() == x) as IValue).Value));
 
-        List<Type> all_types = new List<Type>();
-        all_types.AddRange(types_empty);
-        all_types.AddRange(types_with_value);
-
-        GameObject cell_go = Resources.Load("CellPrefab/Cell") as GameObject;
+        GameObject cell_go = GameObject.Instantiate(Resources.Load("CellPrefab/Cell") as GameObject, position, new Quaternion());
         foreach (var item in all_types)
         {
             cell_go.AddComponent(item);
@@ -102,33 +70,43 @@ public class CellCreator
             IValue value_class = cell_go.GetComponent(types_with_value[i]) as IValue;
             value_class.Value = (float)values[i];
         }
-        Cell cell = (cell_go.GetComponent(typeof(Cell)) as Cell);
-        cell.InitializeCell(parameters.intellect);
-        GameObject.Instantiate(cell_go, parameters.position, new Quaternion());
-        return cell;
+        Component n_cell = cell_go.GetComponents<Component>().ToList().Find((x) => x is Cell);
+        (cell_go.GetComponents<Component>().ToList().Find((x) => x is ParentID) as ParentID).ID = (cell as Cell).ID;
+        (n_cell as Cell).InitializeCell(new Intellect((cell as Cell).Intellect), (cell as Cell).Death, (cell as Cell).Birth, all_types.Select(x => x.Name).ToList());
+        return n_cell;
     }
-}
-public class CreateCellParameters
-{
-    public Vector2 position;
-    public CellCreateMode mode;
-    public Intellect intellect;
-    public List<ModulesData> parameters;
-    public CreateCellParameters(Vector2 position, CellCreateMode mode, Intellect intellect, List<ModulesData> parameters)
+    public static Component CreateCellFromData(ServerSpeaker.CellData cellData, Action<Component> death, Action<Component> birth, Action<Component> load)
     {
-        this.position = position;
-        this.mode = mode;
-        this.intellect = intellect;
-        this.parameters = parameters;
-    }
-}
-public class ModulesData
-{
-    public string name;
-    public float? value;
-    public ModulesData(string name, float? value)
-    {
-        this.name = name;
-        this.value = value;
+        //List<Type> all_types = (cellData as Cell).AllModules.Select(x => Type.GetType(x)).ToList();
+        List<Type> all_types = cellData.modules.Select(x => Type.GetType(x.name)).ToList();
+
+        List <Type> types_with_value = all_types.Where(x => x.GetInterface(typeof(IValue).Name) != null).ToList();
+
+        List<float?> values = new();
+        //types_with_value.ForEach(x => values.Add(((cell as Cell).Properties.Find((y) => y.GetType() == x) as IValue).Value));
+        types_with_value.ForEach(x => values.Add(cellData.modules.Find((y) => y.name == x.Name).value));
+
+        Vector2 pos = new((float)cellData.modules.Find((y) => y.name == typeof(PositionX).Name).value, (float)cellData.modules.Find((y) => y.name == typeof(PositionY).Name).value);
+        GameObject cell_go = GameObject.Instantiate(Resources.Load("CellPrefab/Cell") as GameObject, pos, new Quaternion());
+        foreach (var item in all_types)
+        {
+            cell_go.AddComponent(item);
+        }
+        for (int i = 0; i < types_with_value.Count; i++)
+        {
+            IValue value_class = cell_go.GetComponent(types_with_value[i]) as IValue;
+            value_class.Value = (float)values[i];
+        }
+        Component n_cell = cell_go.GetComponents<Component>().ToList().Find((x) => x is Cell);
+        (cell_go.GetComponents<Component>().ToList().Find((x) => x is ParentID) as ParentID).ID = cellData.parent_id;
+        (cell_go.GetComponents<Component>().ToList().Find((x) => x is OwnID) as OwnID).ID = cellData.own_id;
+        Intellect intellect = new Intellect(
+            cellData.intellect.neurons.Select(x => new Neuron(x.bias)).ToList(),
+            cellData.intellect.gens.Select(x => new Synaps(x.el_neur_number, x.fin_neur_number, x.weight)).ToList(),
+            cellData.intellect.input_neurons_count,
+            cellData.intellect.output_neurons_count
+        );
+        (n_cell as Cell).InitializeCell_FromData(intellect, death, birth, load, all_types.Select(x => x.Name).ToList());
+        return n_cell;
     }
 }

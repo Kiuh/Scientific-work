@@ -1,53 +1,37 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class Reproduction : MonoBehaviour, IProperty, IReproduction
+public class Reproduction : MonoBehaviour, IProperty
 {
     [SerializeField]
-    DublicateEnergyBorder dublicateEnergy;
+    Component dublicateEnergy;
     [SerializeField]
-    Energy energy;
+    Component energy;
     [SerializeField]
-    CreateCellParameters cellParameters;
+    Component positionX;
     [SerializeField]
-    Action<CreateCellParameters> birthNew;
+    Component positionY;
+    [SerializeField]
+    Component cell;
 
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
-        dublicateEnergy = properties.Where(x => x is DublicateEnergyBorder).Cast<DublicateEnergyBorder>().First();
-        energy = properties.Where(x => x is Energy).Cast<Energy>().First();
+        dublicateEnergy = properties.Find((x) => x is DublicateEnergyBorder);
+        energy = properties.Find((x) => x is Energy);
 
-        PositionX positionX = properties.Where(x => x is PositionX).Cast<PositionX>().First();
-        PositionY positionY = properties.Where(x => x is PositionY).Cast<PositionY>().First();
-        Cell cell = properties.Where(x => x is Cell).Cast<Cell>().First();
-        
-        List<ModulesData> modulesDatas = new List<ModulesData>();
-        List<Component> components = gameObject.GetComponents<Component>().Where(x => x is IProperty).ToList();
-        foreach (var component in components)
-        {
-            modulesDatas.Add(new ModulesData(component.name, component is IValue ? (component as IValue).Value: null));
-        }
-
-        cellParameters = new CreateCellParameters(
-            new Vector2(positionX.Value, positionY.Value),
-            CellCreateMode.FullCopy,
-            cell.Intellect,
-            modulesDatas
-        );
+        positionX = properties.Find((x) => x is PositionX);
+        positionY = properties.Find((x) => x is PositionY);
+        cell = properties.Find((x) => x is Cell);
     }
     public void FixedUpdate()
     {
-        if (energy.Value >= dublicateEnergy.Value)
+        if(!(cell as Cell).IsCellCreated || cell == null)
+            return;
+        if ((energy as Energy).Value >= (dublicateEnergy as DublicateEnergyBorder).Value)
         {
-            birthNew(cellParameters);
+            (energy as Energy).Value /= 2;
+            //CellCreator.CreateChild(new Vector2((positionX as PositionX).Value, (positionY as PositionY).Value), cell);
+            CellCreator.CreateStandartCell(new Vector2((positionX as PositionX).Value, (positionY as PositionY).Value), (cell as Cell).Death, (cell as Cell).Birth);
         }
-    }
-
-    public void SetBirthDelegate(Action<CreateCellParameters> birthNew)
-    {
-        this.birthNew = birthNew;
     }
 }

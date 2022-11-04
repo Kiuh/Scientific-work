@@ -1,22 +1,32 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DeathInstinct : MonoBehaviour, IProperty
+public class DeathInstinct : MonoBehaviour, IProperty, IDeath
 {
     [SerializeField]
-    EnergyDeathBorder deathBorder;
+    Component cell;
     [SerializeField]
-    Energy energy;
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    Component death_border;
+    [SerializeField]
+    Component energy;
+    [SerializeField]
+    Action<Component> death;
+
+    public Action<Component> Death { set => death = value; }
+
+    public void FindNeededPropertys(List<Component> properties)
     {
-        deathBorder = properties.Where(x => x is EnergyDeathBorder).Cast<EnergyDeathBorder>().First();
-        energy = properties.Where(x => x is Energy).Cast<Energy>().First();
+        cell = properties.Find((x) => x is Cell);
+        death_border = properties.Find((x) => x is EnergyDeathBorder);
+        energy = properties.Find((x) => x is Energy);
     }
     public void FixedUpdate()
     {
-        if (energy.Value <= deathBorder.Value)
+        if ((energy as Energy).Value <= (death_border as EnergyDeathBorder).Value)
         {
+            death(cell);
             Destroy(gameObject);
         }
     }

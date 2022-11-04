@@ -6,18 +6,14 @@ public class VisionRadius : MonoBehaviour, IProperty, IValue
 {
     [SerializeField]
     float radius;
-    public VisionRadius(float radius)
-    {
-        this.radius = radius;
-    }
     public float Value { get => radius; set => radius = value; }
 
     public void SetRandomValue()
     {
-        Value = Random.Range(2, 4);
+        Value = Random.Range(1, 2.5f);
     }
 
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
         return;
     }

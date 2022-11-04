@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UIElements;
 
 public class ServerSpeaker : MonoBehaviour
 {
-    string URI = "http://localhost:27503";
+    readonly string URI = "http://localhost:27503";
     string current_login = "";
     void Start()
     {
@@ -346,6 +345,7 @@ public class ServerSpeaker : MonoBehaviour
 
         UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + "/Cells/" + send_id + query, "PATCH");
         webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
         webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         yield return webRequest.SendWebRequest();
@@ -361,8 +361,8 @@ public class ServerSpeaker : MonoBehaviour
     {
         public long parent_id;
         public long own_id;
-        List<ModuleData> modules;
-        IntellectData intellect;
+        public List<ModuleData> modules;
+        public IntellectData intellect;
         public CellData(long parent_id, long own_id, List<ModuleData> modules, IntellectData intellect)
         {
             this.parent_id = parent_id;
@@ -389,9 +389,9 @@ public class ServerSpeaker : MonoBehaviour
         public int gens_count;
         public int input_neurons_count;
         public int output_neurons_count;
-        List<NeuronData> neurons;
-        List<GenData> gens;
-        public IntellectData(int neurons_count, int gens_count, int input_neurons_count, int output_neurons_count, List<NeuronData> neurons, List<GenData> gens)
+        public List<NeuronData> neurons;
+        public List<SynapsData> gens;
+        public IntellectData(int neurons_count, int gens_count, int input_neurons_count, int output_neurons_count, List<NeuronData> neurons, List<SynapsData> gens)
         {
             this.neurons_count = neurons_count;
             this.gens_count = gens_count;
@@ -411,12 +411,12 @@ public class ServerSpeaker : MonoBehaviour
         }
     }
     [Serializable]
-    public class GenData
+    public class SynapsData
     {
         public int el_neur_number;
         public int fin_neur_number;
         public float weight;
-        public GenData(int el_neur_number, int fin_neur_number, float weight)
+        public SynapsData(int el_neur_number, int fin_neur_number, float weight)
         {
             this.el_neur_number = el_neur_number;
             this.fin_neur_number = fin_neur_number;

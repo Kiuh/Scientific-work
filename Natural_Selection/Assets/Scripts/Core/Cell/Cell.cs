@@ -6,93 +6,127 @@ using UnityEngine;
 public class Cell : MonoBehaviour, IProperty
 {
     [SerializeField]
-    List<IReceptor> receptors;
+    List<Component> receptors;
     [SerializeField]
-    List<IProperty> properties;
+    List<Component> properties;
     [SerializeField]
-    List<IAction> actions;
+    List<Component> actions;
+    [SerializeField]
+    List<string> all_modules;
     [SerializeField]
     Intellect intellect;
+    [SerializeField]
+    bool cell_created = false;
+    [SerializeField]
+    Action<Component> death;
+    [SerializeField]
+    Action<Component> birth;
 
-    public Action<CreateCellParameters> birth_trigger;
-
-    public bool cell_created = false;
-
-    void SetComponents()
+    public void InitializeCell(Intellect intellect, Action<Component> death, Action<Component> birth, List<string> all_modules)
     {
-        receptors = gameObject.GetComponents<IReceptor>().ToList();
-        properties = gameObject.GetComponents<IProperty>().ToList();
-        actions = gameObject.GetComponents<IAction>().ToList();
+        receptors = gameObject.GetComponents<Component>().ToList().Where(x => x is IReceptor).ToList();
+        properties = gameObject.GetComponents<Component>().ToList().Where(x => x is IProperty).ToList();
+        actions = gameObject.GetComponents<Component>().ToList().Where(x => x is IAction).ToList();
 
-        receptors.ForEach(receptor => receptor.FindNeededPropertys(properties));
-        properties.ForEach(receptor => receptor.FindNeededPropertys(properties));
-        actions.ForEach(receptor => receptor.FindNeededPropertys(properties));
-    }
-    public void InitializeCell(Intellect intellect)
-    {
-        SetComponents();
-        this.intellect = new Intellect(intellect);
-        SetOrderAndAnother();
+        receptors.ForEach(x => (x as IReceptor).FindNeededPropertys(properties));
+        properties.ForEach(x => (x as IProperty).FindNeededPropertys(properties));
+        actions.ForEach(x => (x as IAction).FindNeededPropertys(properties));
 
-    }
-    public void InitializeCell(int neurons, int gens)
-    {
-        SetComponents();
-        int input_neurons = receptors.Select(x => x.GetOutputCount()).Sum();
-        int output_neurons = actions.Select(x => x.GetInputCount()).Sum();
-        int free_neurons = neurons - input_neurons - output_neurons;
-        intellect = new Intellect(input_neurons, free_neurons, output_neurons, gens);
-        SetOrderAndAnother();
-    }
-    void SetOrderAndAnother()
-    {
-        // Maybe wrong
-        //receptors.Sort((x1, x2) => x1.queue_number - x2.queue_number);
-        //actions.Sort((x1, x2) => x1.queue_number - x2.queue_number);
+        this.intellect = intellect;
+        this.death = death;
+        this.birth = birth;
+        this.all_modules = all_modules;
 
-        receptors.Where(x => x is IReproduction)
-            .Cast<IReproduction>().ToList().ForEach(x => x.SetBirthDelegate(birth_trigger));
+        properties.Where(x => x is IDeath).ToList().ForEach(x => (x as IDeath).Death = death);
+
+        birth(gameObject.GetComponents<Component>().ToList().Find((x) => x is Cell));
 
         cell_created = true;
     }
+    public void InitializeCell_FromData(Intellect intellect, Action<Component> death, Action<Component> birth, Action<Component> load, List<string> all_modules)
+    {
+        receptors = gameObject.GetComponents<Component>().ToList().Where(x => x is IReceptor).ToList();
+        properties = gameObject.GetComponents<Component>().ToList().Where(x => x is IProperty).ToList();
+        actions = gameObject.GetComponents<Component>().ToList().Where(x => x is IAction).ToList();
 
-    public void LiveMoment()
+        receptors.ForEach(x => (x as IReceptor).FindNeededPropertys(properties));
+        properties.ForEach(x => (x as IProperty).FindNeededPropertys(properties));
+        actions.ForEach(x => (x as IAction).FindNeededPropertys(properties));
+
+        this.intellect = intellect;
+        this.death = death;
+        this.birth = birth;
+        this.all_modules = all_modules;
+
+        properties.Where(x => x is IDeath).ToList().ForEach(x => (x as IDeath).Death = death);
+
+        load(gameObject.GetComponents<Component>().ToList().Find((x) => x is Cell));
+
+        cell_created = true;
+    }
+    void FixedUpdate()
     {
         if (!cell_created)
             return;
 
-        List<float> info = new List<float>();
+        List<float> info = new();
+
         foreach (var item in receptors)
-            info.AddRange(item.GetInformation());
-        Debug.Log(info);
+            info.AddRange((item as IReceptor).GetInformation());
+
+        //Debug.Log("Input info:  (" + info.Select(x => Convert.ToString(x)).Aggregate((x,y) => x + ")  (" + y) + ")");
+
         List<float> great_info = intellect.Think(info);
-        Debug.Log(great_info);
+
+        //Debug.Log("Output info:  (" + great_info.Select(x => Convert.ToString(x)).Aggregate((x, y) => x + ")  (" + y ) + ")");
+
         foreach (var item in actions)
-            item.DoAction(great_info);
+            (item as IAction).DoAction(great_info);
     }
-
-    public void FixedUpdate()
-    {
-        LiveMoment();
-    }
-
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
         return;
     }
-
+    public List<Component> Receptors { get => receptors; }
+    public List<Component> Properties { get => properties; }
+    public List<Component> Actions { get => actions; }
+    public Action<Component> Death { get => death; }
+    public Action<Component> Birth { get => birth; }
     public Intellect Intellect { get => intellect; }
-
-    public List<ServerSpeaker.ModuleData> modulesData {
-        get {
-            List<ServerSpeaker.ModuleData> list = new();
-            foreach(var item in gameObject.GetComponents<Component>().Where(x => x is IReceptor || x is IAction || x is IProperty)){
-                list.Add(new ServerSpeaker.ModuleData(item.GetType().Name, item is IValue ? (item as IValue).Value : null));
-            }
-            return list;
-        } 
+    public bool IsCellCreated { get => cell_created; }
+    public List<string> AllModules { get => all_modules; }
+    public long ID {
+        get 
+        {
+            return (properties.Find((x) => x is OwnID) as OwnID).ID; 
+        }
+        set
+        {
+            (properties.Find((x) => x is OwnID) as OwnID).ID = value;
+        }
     }
+    public ServerSpeaker.CellData GetCellData()
+    {
+        Component own_id = properties.Find((x) => x is OwnID);
+        Component parent_id = properties.Find((x) => x is ParentID);
 
+        List<ServerSpeaker.ModuleData> list = new();
+        foreach (var item in gameObject.GetComponents<Component>().Where(x => x is IReceptor || x is IAction || x is IProperty))
+        {
+            list.Add(new ServerSpeaker.ModuleData(item.GetType().Name, item is IValue ? (item as IValue).Value : null));
+        }
+
+        ServerSpeaker.IntellectData intellectData = new(
+            intellect.neurons.Count,
+            intellect.synapses.Count,
+            intellect.input_neurons,
+            intellect.output_neurons,
+            intellect.neurons.Select(x => new ServerSpeaker.NeuronData(x.bias)).ToList(),
+            intellect.synapses.Select(x => new ServerSpeaker.SynapsData(x.start_neuron_number, x.finish_neuron_number, x.weight)).ToList()
+        );
+
+        return new ServerSpeaker.CellData((parent_id as ParentID).ID, (own_id as OwnID).ID, list, intellectData);
+    }
     public List<ServerSpeaker.ModuleData> GetPositionsData()
     {
         List<ServerSpeaker.ModuleData> list = new();

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,21 +5,29 @@ using UnityEngine;
 public class Gluttony : MonoBehaviour, IProperty
 {
     [SerializeField]
-    Energy energy;
+    Component energy;
     [SerializeField]
-    Herbivory herbivory;
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    Component herbivory;
+    [SerializeField]
+    Component cell;
+    public void FindNeededPropertys(List<Component> properties)
     {
-        energy = properties.Where(x => x is Energy).Cast<Energy>().First();
-        herbivory = properties.Where(x => x is Herbivory).Cast<Herbivory>().First();
+        energy = properties.Find((x) => x is Energy);
+        herbivory = properties.Find((x) => x is Herbivory);
+        cell = properties.Find((x) => x is Cell);
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
-        collision.TryGetComponent(out IFood food);
-        if (food != null)
+        if (!(cell as Cell).IsCellCreated || cell == null)
+            return;
+        List<Component> components = collision.gameObject.GetComponents<Component>().ToList();
+        List<Component> food = components.Where(x => x is IFood).ToList();
+        if (food.Count != 0)
         {
-            energy.Value += food.GetEnergy() * herbivory.Value;
+            foreach (var item in food)
+            {
+                (energy as Energy).Value += (item as IFood).GetEnergy() * (herbivory as Herbivory).Value;
+            }
             Destroy(collision.gameObject);
         }
     }

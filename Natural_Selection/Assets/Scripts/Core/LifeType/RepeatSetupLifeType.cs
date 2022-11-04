@@ -1,18 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RepeatSetupLifeType : MonoBehaviour, ILifeType
 {
-    GenerationManager generationManager;
-
-    private void Start()
+    public void CreateNewCells(Action<Component> death, Action<Component> birth)
     {
-        generationManager = GameObject.FindObjectOfType<GenerationManager>();
-    }
-
-    public List<Cell> CreateNewCells()
-    {
-        return generationManager.CreateFirstCells();
+        FindObjectOfType<GenerationManager>().CreateFirstCells();
     }
 }

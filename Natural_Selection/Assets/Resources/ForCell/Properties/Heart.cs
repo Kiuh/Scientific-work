@@ -1,26 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Heart : MonoBehaviour, IProperty
 {
     [SerializeField]
-    ConsumtionEnergy consumtionEnergy;
+    Component consumtion_energy;
     [SerializeField]
-    Energy energy;
+    Component energy;
     [SerializeField]
-    Cell cell;
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    Component cell;
+    public void FindNeededPropertys(List<Component> properties)
     {
-        consumtionEnergy = properties.Where(x => x is ConsumtionEnergy).Cast<ConsumtionEnergy>().ToList().First();
-        energy = properties.Where(x => x is Energy).Cast<Energy>().ToList().First();
-        cell = properties.Where(x => x is Cell).Cast<Cell>().ToList().First();
+        consumtion_energy = properties.Find((x) => x is ConsumtionEnergy);
+        energy = properties.Find((x) => x is Energy);
+        cell = properties.Find((x) => x is Cell);
     }
     public void FixedUpdate()
     {
-        if (!cell.cell_created)
+        if (!(cell as Cell).IsCellCreated || cell == null)
             return;
-        energy.Value -= consumtionEnergy.Value;
+        (energy as Energy).Value -= (consumtion_energy as ConsumtionEnergy).Value;
     }
 }

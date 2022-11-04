@@ -6,16 +6,12 @@ public class MovmentSpeed : MonoBehaviour, IProperty, IValue
 {
     [SerializeField]
     float speed;
-    public MovmentSpeed(float speed)
-    {
-        this.speed = speed;
-    }
     public float Value { get => speed; set => speed = value; }
     public void SetRandomValue()
     {
-        Value = Random.Range(2f, 4f);
+        Value = Random.Range(1f, 2f);
     }
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
         return;
     }

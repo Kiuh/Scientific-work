@@ -6,7 +6,7 @@ using UnityEngine;
 public class CircleVision : MonoBehaviour, IProperty , IVision
 {
     [SerializeField]
-    List<VisionRadius> vision_radius;
+    Component vision_radius;
 
     public List<Collider2D> GetObjectsInVision(Transform transform)
     {
@@ -17,11 +17,11 @@ public class CircleVision : MonoBehaviour, IProperty , IVision
 
     public float GetVisionRadius()
     {
-        return vision_radius.Select(x => x.Value).Max();
+        return (vision_radius as VisionRadius).Value;
     }
 
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
-        vision_radius = properties.Where(x => x is VisionRadius).Cast<VisionRadius>().ToList();
+        vision_radius = properties.Find((x) => x is VisionRadius);
     }
 }

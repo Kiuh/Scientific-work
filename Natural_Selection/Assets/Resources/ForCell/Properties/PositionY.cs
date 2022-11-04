@@ -6,13 +6,13 @@ public class PositionY : MonoBehaviour, IProperty, IValue
 {
     public float Value { 
         get => transform.position.y;
-        set => transform.position = new Vector3(transform.position.y, value, transform.position.z);
+        set => transform.position.Set(transform.position.y, value, transform.position.z);
     }
     public void SetRandomValue()
     {
         return;
     }
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
         return;
     }

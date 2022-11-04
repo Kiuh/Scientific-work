@@ -7,18 +7,12 @@ public class ConsumtionEnergy : MonoBehaviour, IProperty, IValue
 {
     [SerializeField]
     float energy;
-    public ConsumtionEnergy(float energy)
-    {
-        this.energy = energy;
-    }
-
     public float Value { get => energy; set => energy = value; }
     public void SetRandomValue()
     {
-        Value = Random.Range(0.01f, 0.02f);
+        Value = Random.Range(0.005f, 0.01f);
     }
-
-    void IProperty.FindNeededPropertys(List<IProperty> properties)
+    public void FindNeededPropertys(List<Component> properties)
     {
         return;
     }
