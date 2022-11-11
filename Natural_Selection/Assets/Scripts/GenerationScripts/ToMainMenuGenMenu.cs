@@ -8,6 +8,6 @@ public class ToMainMenuGenMenu : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        SceneManager.LoadScene("MainMenu");
+        GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>().LoadScene("MainMenu");
     }
 }

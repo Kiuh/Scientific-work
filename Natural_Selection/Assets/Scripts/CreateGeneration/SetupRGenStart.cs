@@ -37,9 +37,9 @@ public class SetupRGenStart : MonoBehaviour
 
     public void Start_WW(ServerSpeaker.CreationsVariantsResponse all_data)
     {
-        List<string> maps = all_data.map_names;
-        List<string> life_rules = all_data.life_types;
-        List<string> feeding_rules = all_data.feed_types;
+        List<string> maps = all_data.map_names.Select(x => x.tp_name).ToList();
+        List<string> life_rules = all_data.life_types.Select(x => x.tp_name).ToList();
+        List<string> feeding_rules = all_data.feed_types.Select(x => x.tp_name).ToList();
         List<string> ticks = all_data.ticks.Select((x) => Convert.ToString(x).Replace(',', '.')).ToList();
 
         maps_dd.ClearOptions();
@@ -57,8 +57,8 @@ public class SetupRGenStart : MonoBehaviour
         start_options_dd.ClearOptions();
         foreach (var item in all_data.setup_types)
         {
-            start_options_dd.AddOptions(new List<string>() { item.name });
-            GameObject go = Resources.Load("GenerationSetups/" + item.name) as GameObject;
+            start_options_dd.AddOptions(new List<string>() { item.tp_name });
+            GameObject go = Resources.Load("GenerationSetups/" + item.tp_name) as GameObject;
             shows.Add(() => {
                 current_show = Instantiate(go, info_rt);
                 current_show.GetComponent<ISetup>().PushInformation(item.json);

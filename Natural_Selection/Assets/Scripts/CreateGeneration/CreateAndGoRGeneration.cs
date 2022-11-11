@@ -24,7 +24,7 @@ public class CreateAndGoRGeneration : MonoBehaviour, IPointerClickHandler
     SetupRGenStart RGS;
 
     [SerializeField]
-    TMP_Text error;
+    Massager MGR;
 
     ServerSpeaker ss;
 
@@ -37,13 +37,13 @@ public class CreateAndGoRGeneration : MonoBehaviour, IPointerClickHandler
     {
         ServerSpeaker.CreateGenerationData data = new(
             gen_name_input.text,
-            maps_dd.options[maps_dd.value].text,
-            feeding_rule_dd.options[maps_dd.value].text,
-            start_options_dd.options[maps_dd.value].text,
-            life_rule_dd.options[maps_dd.value].text,
+            new ServerSpeaker.PutMapData(maps_dd.options[maps_dd.value].text, ""),
+            new ServerSpeaker.PutFeedTypeData(feeding_rule_dd.options[maps_dd.value].text, ""),
+            new ServerSpeaker.PutSetupTypeData(start_options_dd.options[maps_dd.value].text,
+                RGS.current_show.GetComponent<ISetup>().GetNewInformation()),
+            new ServerSpeaker.PutLifeTypeData( life_rule_dd.options[maps_dd.value].text, "" ),
             gen_comments_input.text,
-            ticks_dd.options[maps_dd.value].text,
-            RGS.current_show.GetComponent<ISetup>().GetNewInformation()
+            ticks_dd.options[maps_dd.value].text
         );
         ss.CreateNewGeneration(data, OnPointerClick_Continue);
     }
@@ -52,11 +52,12 @@ public class CreateAndGoRGeneration : MonoBehaviour, IPointerClickHandler
     {
         if (value)
         {
-            SceneManager.LoadScene("Generations");
+
+            GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>().LoadScene("Generations");
         }
         else
         {
-            error.text = "Fail to create generation";
+            MGR.ShowMassage("Fail to create generation");
         }
     }
 }

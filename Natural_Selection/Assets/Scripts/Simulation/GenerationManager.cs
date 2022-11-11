@@ -28,8 +28,7 @@ public class GenerationManager : MonoBehaviour
     [SerializeField]
     ServerSpeaker ss;
 
-    [SerializeField]
-    bool _lock = true;
+    public bool _lock = true;
 
     void Awake()
     {
@@ -40,6 +39,8 @@ public class GenerationManager : MonoBehaviour
         Destroy(go.gameObject);
 
         ss.GetGenerations(ContinueAwaking);
+        Time.timeScale = 0;
+        Time.fixedDeltaTime = 0;
     }
     void ContinueAwaking(ServerSpeaker.GenerationsResponse all_generations)
     {
@@ -54,10 +55,12 @@ public class GenerationManager : MonoBehaviour
         {
             CreateFirstCells();
             _lock = false;
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
         }
         else
         {
-            //ss.GetCellsFromTick(generation_name, generation_data.last_send_num - 1, CompleteAwaking);
+            ss.GetCellsFromTick(generation_name, generation_data.last_send_num - 1, CompleteAwaking);
         }
     }
     public void CompleteAwaking(ServerSpeaker.CellsFromTickResponse response)
@@ -67,6 +70,8 @@ public class GenerationManager : MonoBehaviour
             CellCreator.CreateCellFromData(item, RememberDead, RememberBirth, RememberLoad);
         }
         _lock = false;
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02f;
     }
 
     public void FixedUpdate()
@@ -126,7 +131,7 @@ public class GenerationManager : MonoBehaviour
         foreach (var item in cells)
         {
             if (!created_cells.Contains((item as Cell).ID)) {
-                List<ServerSpeaker.ModuleData> md = (item as Cell).GetPositionsData();
+                List<ServerSpeaker.ModuleData> md = (item as Cell).GetPositionAndForceData();
                 changes.AddRange(md.Select(x => new ServerSpeaker.ModuleDataWithId((item as Cell).ID, x.name, x.value)));
             }
         }
@@ -172,7 +177,7 @@ public class GenerationManager : MonoBehaviour
             GameObject go = Resources.Load("GenerationSetups/SetupsScripts/" + generation_data.setup_type) as GameObject;
             GameObject gameO = Instantiate(go);
             sceneSetup = gameO.GetComponents<Component>().ToList().Where(x => x is ISceneSetup).First();
-            (sceneSetup as ISceneSetup).FillWithJson(generation_data.setup_json);
+            (sceneSetup as ISceneSetup).FillWithJson(generation_data.setup_type.json);
         }
         (sceneSetup as ISceneSetup).CreateFirstCells(RememberDead, RememberBirth);
     }

@@ -9,7 +9,7 @@ public class ContonueGeneratin : MonoBehaviour, IPointerClickHandler
 {
     public string choosedgeneration;
     [SerializeField]
-    TMP_Text massage;
+    Massager MGR;
 
     [SerializeField]
     GameObject Gen_Info;
@@ -24,7 +24,7 @@ public class ContonueGeneratin : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            massage.text = "Выберете генерацию.";
+            MGR.ShowMassage("Choose generation.");
         }
     }
 }

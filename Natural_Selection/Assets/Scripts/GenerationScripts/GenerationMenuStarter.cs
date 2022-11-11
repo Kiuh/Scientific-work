@@ -34,6 +34,11 @@ public class GenerationMenuStarter : MonoBehaviour
         ss.GetGenerations(FillListWithItems_WW);
     }
 
+    public void DeleteCurrentInfoPanel()
+    {
+        InfoPanel.gameObject.SetActive(false);
+    }
+
     void FillListWithItems_WW(ServerSpeaker.GenerationsResponse generations)
     {
         if(generations.generations == null)
@@ -50,7 +55,7 @@ public class GenerationMenuStarter : MonoBehaviour
 
         GenerationItemList GIL = go.GetComponent<GenerationItemList>();
 
-        GIL.InitListItem(g.name, g.life_type);
+        GIL.InitListItem(g.name, g.life_type.tp_name);
         ss.GetGenerationTime(g.name, (ServerSpeaker.GenerationTimeResponse var) => GIL.SetTime(Convert.ToString(var.time)));
         ss.GetGenerationLifeEnds(g.name, (ServerSpeaker.GenerationLifeEndsResponse var) => GIL.Setcount(Convert.ToString(var.life_ends)));
         GIL.InfoPanel = InfoPanel;

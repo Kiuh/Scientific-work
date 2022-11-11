@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 public class DeleteChoosedGeneration : MonoBehaviour, IPointerClickHandler
 {
     public string choosedgeneration;
     [SerializeField]
-    TMP_Text massage;
+    Massager MGR;
     [SerializeField]
     GenerationMenuStarter menuStarter;
 
@@ -28,7 +25,7 @@ public class DeleteChoosedGeneration : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            massage.text = "Выберете генерацию.";
+            MGR.ShowMassage("Choose generation");
         }
     }
 
@@ -38,10 +35,11 @@ public class DeleteChoosedGeneration : MonoBehaviour, IPointerClickHandler
         {
             menuStarter.DeleteAllItemsInContent();
             menuStarter.FillListWithItems();
+            menuStarter.DeleteCurrentInfoPanel();
         }
         else
         {
-            massage.text = "Не удалось удалить.";
+            MGR.ShowMassage("Fail to delete generation.");
         }
     }
 }

@@ -12,7 +12,7 @@ public class RegistrationButton : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     TMP_Text password;
     [SerializeField]
-    TMP_Text error_massage;
+    Massager MGR;
 
     ServerSpeaker ss;
 
@@ -29,8 +29,8 @@ public class RegistrationButton : MonoBehaviour, IPointerClickHandler
     public void Registration(bool value)
     {
         if (value)
-            SceneManager.LoadScene("Login");
+            GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>().LoadScene("Login");
         else
-            error_massage.text = "Something wrong";
+            MGR.ShowMassage("Something wrong");
     }
 }

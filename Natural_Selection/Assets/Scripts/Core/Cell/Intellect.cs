@@ -139,16 +139,12 @@ public class Intellect
             calculated.Add(neuron_number);
         }
     }
-    private float ActivationFunction(float x)
-    {
-        return (float)Math.Tanh(x);
-    }
     private void CalculateNeuron(int neuron_number)
     {
         foreach (Synaps syn in synapses.Where(x => x.finish_neuron_number == neuron_number))
             neurons[neuron_number].container += neurons[syn.start_neuron_number].container * syn.weight;
         neurons[neuron_number].container += neurons[neuron_number].bias;
-        neurons[neuron_number].container = ActivationFunction(neurons[neuron_number].container);
+        neurons[neuron_number].Activate();
     }
     public List<float> Think(List<float> information)
     {
@@ -174,9 +170,51 @@ public class Neuron
 {
     public float container = 0;
     public float bias = 0;
+
+    public int activation_function = 0;
+
     public Neuron(float bias)
     {
         this.bias = bias;
+        activation_function = 0;
+    }
+    public void Activate()
+    {
+        //container = (float)Math.Tanh(container);
+        switch (activation_function)
+        {
+            case 0:
+            default: // Гладкая сигмоида (-1, 1)
+                container /= (1 + (float)Math.Abs(container));
+                break;
+            case 1: // Ступенька 0 или 1
+                container = container >= 0 ? 1 : 0;
+                break;
+            case 2: // Логичтическая сигмоида, (0, 1)
+                container = 1 / (1 + (float)Math.Exp(-container));
+                break;
+            case 3: // Обраткая ступенька -1 или 0
+                container = container <= 0 ? -1 : 0;
+                break;
+            case 4: // Бинарная ступенька -1 или 0
+                container = container <= 0 ? -1 : 1;
+                break;
+            case 5: // Синусоида [-1, 1]
+                container = (float)Math.Sin(container);
+                break;
+            case 6: // Косинусоида [-1, 1]
+                container = (float)Math.Cos(container);
+                break;
+            case 7: // Гауссова (0, 1]
+                container = (float)Math.Exp(-container * container);
+                break;
+            case 8: // Обратная гауссова [-1, 0)
+                container = -(float)Math.Exp(-container * container);
+                break;
+            case 9: // Обратная гладкая сигмоида (-1, 1)
+                container /= -(1 + (float)Math.Abs(container));
+                break;
+        }
     }
 }
 [Serializable]

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -101,15 +102,39 @@ public class ServerSpeaker : MonoBehaviour
     public class GenerationData
     {
         public string name;
-        public string map;
-        public string life_type;
-        public string feed_type;
-        public string setup_type;
+        public GetMapData map;
+        public GetLifeTypeData life_type;
+        public GetFeedTypeData feed_type;
+        public GetSetupTypeData setup_type;
         public float tick;
         public long last_send_num;
-        public string setup_json;
         public long last_cell_num;
         public string description;
+    }
+
+    [Serializable]
+    public class GetMapData
+    {
+        public string tp_name;
+        public string json;
+    }
+    [Serializable]
+    public class GetLifeTypeData
+    {
+        public string tp_name;
+        public string json;
+    }
+    [Serializable]
+    public class GetFeedTypeData
+    {
+        public string tp_name;
+        public string json;
+    }
+    [Serializable]
+    public class GetSetupTypeData
+    {
+        public string tp_name;
+        public string json;
     }
     #endregion
     #region Удалить генерацию
@@ -158,17 +183,60 @@ public class ServerSpeaker : MonoBehaviour
     }
     #endregion
     #region Создать генерацию
+    [Serializable]
+    public class PutMapData
+    {
+        public string tp_name;
+        public string json;
+        public PutMapData(string tp_name, string json)
+        {
+            this.tp_name = tp_name;
+            this.json = json;
+        }
+    }
+    [Serializable]
+    public class PutFeedTypeData
+    {
+        public string tp_name;
+        public string json;
+        public PutFeedTypeData(string tp_name, string json)
+        {
+            this.tp_name = tp_name;
+            this.json = json;
+        }
+    }
+    [Serializable]
+    public class PutSetupTypeData
+    {
+        public string tp_name;
+        public string json;
+        public PutSetupTypeData(string tp_name, string json)
+        {
+            this.tp_name = tp_name;
+            this.json = json;
+        }
+    }
+    [Serializable]
+    public class PutLifeTypeData
+    {
+        public string tp_name;
+        public string json;
+        public PutLifeTypeData(string tp_name, string json)
+        {
+            this.tp_name = tp_name;
+            this.json = json;
+        }
+    }
     public class CreateGenerationData
     {
         public string name;
-        public string map;
-        public string feed_type;
-        public string setup_type;
-        public string life_type;
+        public PutMapData map;
+        public PutFeedTypeData feed_type;
+        public PutSetupTypeData setup_type;
+        public PutLifeTypeData life_type;
         public string description;
         public string tick;
-        public string setup_json;
-        public CreateGenerationData(string name, string map, string feed_type, string setup_type, string life_type, string description, string tick, string setup_json)
+        public CreateGenerationData(string name, PutMapData map, PutFeedTypeData feed_type, PutSetupTypeData setup_type, PutLifeTypeData life_type, string description, string tick)
         {
             this.name = name;
             this.map = map;
@@ -177,7 +245,6 @@ public class ServerSpeaker : MonoBehaviour
             this.life_type = life_type;
             this.description = description;
             this.tick = tick;
-            this.setup_json = setup_json;
         }
     }
     public void CreateNewGeneration(CreateGenerationData data, Action<bool> action)
@@ -267,16 +334,17 @@ public class ServerSpeaker : MonoBehaviour
     [Serializable]
     public class CreationsVariantsResponse
     {
-        public List<string> map_names;
-        public List<string> life_types;
-        public List<string> feed_types;
+        public List<CreateVariantData> map_names;
+        public List<CreateVariantData> life_types;
+        public List<CreateVariantData> feed_types;
         public List<float> ticks;
-        public List<SetupTypeData> setup_types;
+        public List<CreateVariantData> setup_types;
     }
     [Serializable]
-    public class SetupTypeData
+    public class CreateVariantData
     {
-        public string name;
+        public string fu_name;
+        public string tp_name;
         public string json;
     }
     #endregion
@@ -344,7 +412,8 @@ public class ServerSpeaker : MonoBehaviour
         string query = "?login=" + current_login;
 
         UnityWebRequest webRequest = new(URI + "/Generation/" + gen_name + "/Cells/" + send_id + query, "PATCH");
-        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
         webRequest.downloadHandler = new DownloadHandlerBuffer();
         webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 

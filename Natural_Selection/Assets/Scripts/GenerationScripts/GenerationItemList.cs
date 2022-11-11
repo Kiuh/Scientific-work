@@ -58,7 +58,7 @@ public class GenerationItemList : MonoBehaviour, IPointerClickHandler
     public void Click(ServerSpeaker.GenerationsResponse Data)
     {
         var data = Data.generations.Where(x => x.name == gen_name_string).FirstOrDefault();
-        InfoPanel.InitInfo(gen_name_string, data.map, gen_type_string, Convert.ToString(data.tick), data.description);
+        InfoPanel.InitInfo(gen_name_string, data.map.tp_name, gen_type_string, Convert.ToString(data.tick), data.description);
 
         FindObjectOfType<ContonueGeneratin>().choosedgeneration = gen_name_string;
         FindObjectOfType<DeleteChoosedGeneration>().choosedgeneration = gen_name_string;

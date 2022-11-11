@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public static class CellCreator
 {
@@ -15,7 +14,7 @@ public static class CellCreator
 
         List<Type> types_with_value = new() { typeof(ConsumtionEnergy), typeof(DublicateEnergyBorder), typeof(Energy),
             typeof(EnergyDeathBorder), typeof(Herbivory), typeof(MovmentSpeed), typeof(PositionX),
-            typeof(PositionY), typeof(VisionRadius)
+            typeof(PositionY), typeof(VisionRadius), typeof(ForceX), typeof(ForceY)
         };
 
         List<Type> all_types = new();
@@ -48,7 +47,7 @@ public static class CellCreator
         }
         (cell_go.GetComponents<Component>().ToList().Find((x) => x is ParentID) as ParentID).ID = -1;
         Component cell = cell_go.GetComponents<Component>().Where(x => x is Cell).First();
-        (cell as Cell).InitializeCell(new Intellect(input_N, 0, output_N, 6), death, birth, all_types.Select(x => x.Name).ToList());
+        (cell as Cell).InitializeCell(new Intellect(input_N, 3, output_N, 6), death, birth, all_types.Select(x => x.Name).ToList());
         return cell;
     }
     public static Component CreateChild(Vector2 position, Component cell)

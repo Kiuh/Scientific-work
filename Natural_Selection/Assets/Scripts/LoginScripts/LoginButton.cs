@@ -10,7 +10,7 @@ public class LoginButton : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     TMP_Text password;
     [SerializeField]
-    TMP_Text error_massage;
+    Massager MGR;
 
     ServerSpeaker ss;
 
@@ -27,9 +27,9 @@ public class LoginButton : MonoBehaviour, IPointerClickHandler
     public void Login(bool input)
     {
         if (input)
-            SceneManager.LoadScene("MainMenu");
+            GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>().LoadScene("MainMenu");
         else
-            error_massage.text = "Something Wrong";
+            MGR.ShowMassage("Something Wrong");
     }
 
 }

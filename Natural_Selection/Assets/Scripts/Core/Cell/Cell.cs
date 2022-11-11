@@ -127,7 +127,7 @@ public class Cell : MonoBehaviour, IProperty
 
         return new ServerSpeaker.CellData((parent_id as ParentID).ID, (own_id as OwnID).ID, list, intellectData);
     }
-    public List<ServerSpeaker.ModuleData> GetPositionsData()
+    public List<ServerSpeaker.ModuleData> GetPositionAndForceData()
     {
         List<ServerSpeaker.ModuleData> list = new();
 
@@ -136,6 +136,12 @@ public class Cell : MonoBehaviour, IProperty
 
         PositionY posy = gameObject.GetComponents<Component>().ToList().Find((x) => x is PositionY) as PositionY;
         list.Add(new ServerSpeaker.ModuleData(posy.GetType().Name, (posy as IValue).Value));
+
+        ForceX forcex = gameObject.GetComponents<Component>().ToList().Find((x) => x is ForceX) as ForceX;
+        list.Add(new ServerSpeaker.ModuleData(forcex.GetType().Name, (forcex as IValue).Value));
+
+        ForceY forcey = gameObject.GetComponents<Component>().ToList().Find((x) => x is ForceY) as ForceY;
+        list.Add(new ServerSpeaker.ModuleData(forcey.GetType().Name, (forcey as IValue).Value));
 
         return list;
     }
