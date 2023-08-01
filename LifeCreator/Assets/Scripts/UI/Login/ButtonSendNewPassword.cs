@@ -4,20 +4,26 @@ using UnityEngine.EventSystems;
 
 public class ButtonSendNewPassword : MonoBehaviour, IPointerClickHandler
 {
-    public string email;
+    public string Email;
+
     [SerializeField]
-    TMP_Text access_code;
+    private TMP_Text access_code;
+
     [SerializeField]
-    TMP_Text new_password;
+    private TMP_Text new_password;
+
     [SerializeField]
-    GameObject myself;
+    private GameObject myself;
+
     [SerializeField]
-    GameObject success_change;
-    ServerSpeaker ss;
+    private GameObject success_change;
+    private ServerSpeaker ss;
+
     public void Start()
     {
         ss = FindObjectOfType<ServerSpeaker>();
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (access_code.text == "" || new_password.text == "new_password")
@@ -25,9 +31,10 @@ public class ButtonSendNewPassword : MonoBehaviour, IPointerClickHandler
             Debug.Log("Loh!");
             return;
         }
-        var data = new ServerSpeaker.ChangePasswordOpenData(access_code.text, new_password.text, email);
+        ServerSpeaker.ChangePasswordOpenData data = new(access_code.text, new_password.text, Email);
         ss.ChangePassword(data, AfterClick);
     }
+
     public void AfterClick(long status_code)
     {
         if (status_code == 200)

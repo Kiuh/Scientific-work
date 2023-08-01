@@ -5,20 +5,26 @@ using UnityEngine.EventSystems;
 public class ButtonRegistaration : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
-    TMP_Text login;
+    private TMP_Text login;
+
     [SerializeField]
-    TMP_Text email;
+    private TMP_Text email;
+
     [SerializeField]
-    TMP_Text password;
+    private TMP_Text password;
+
     [SerializeField]
-    TMP_Text repeat_password;
+    private TMP_Text repeat_password;
+
     [SerializeField]
-    GameObject SuccessRegister;
-    ServerSpeaker ss;
+    private GameObject successRegister;
+    private ServerSpeaker ss;
+
     public void Start()
     {
         ss = FindObjectOfType<ServerSpeaker>();
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (password.text != repeat_password.text)
@@ -27,14 +33,15 @@ public class ButtonRegistaration : MonoBehaviour, IPointerClickHandler
             return;
         }
         Debug.Log(login.text + " " + email.text + " " + password.text);
-        var data = new ServerSpeaker.RegistrationOpenData(login.text, email.text, password.text);
+        ServerSpeaker.RegistrationOpenData data = new(login.text, email.text, password.text);
         ss.Registration(data, AfterClick);
     }
-    void AfterClick(long status_code)
+
+    private void AfterClick(long status_code)
     {
         if (status_code == 200)
         {
-            SuccessRegister.SetActive(true);
+            successRegister.SetActive(true);
         }
         else
         {

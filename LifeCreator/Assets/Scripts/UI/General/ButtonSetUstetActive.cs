@@ -4,9 +4,11 @@ using UnityEngine.EventSystems;
 public class ButtonSetUstetActive : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
-    GameObject target;
+    private GameObject target;
+
     [SerializeField]
-    bool state;
+    private bool state;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         target.SetActive(state);

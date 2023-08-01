@@ -7,124 +7,135 @@ using UnityEngine.Networking;
 
 public class ServerSpeaker : MonoBehaviour
 {
-    readonly string URI = "http://localhost:27503";
-    string PublicKey = "";
-    string Login = "";
-    string HashedPassword = "";
-    void Start()
+    //private readonly string uri = "http://localhost:27503";
+    private readonly string uri = "http://185.6.27.49:27504";
+    private string publicKey = "";
+    private string login = "";
+    private string hashedPassword = "";
+
+    private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        GetPublicKey(WritePublicKey);
+        GetPublicKey((PublicKeyResponse keyResponse) => publicKey = keyResponse.PublicKey);
     }
-    void WritePublicKey(PublicKeyResponse keyResponse)
-    {
-        PublicKey = keyResponse.pubkey;
-    }
-    string GetNonce()
-    {
-        DateTime zero = new DateTime(1970, 1, 1);
-        TimeSpan span = DateTime.UtcNow.Subtract(zero);
 
+    private string GetNonce()
+    {
+        DateTime zero = new(1970, 1, 1);
+        TimeSpan span = DateTime.UtcNow.Subtract(zero);
         return Convert.ToString((long)span.TotalMilliseconds);
     }
-    #region Получить публичный ключ
+
     public void GetPublicKey(Action<PublicKeyResponse> action)
     {
-        StartCoroutine(GetPublicKeySmart(action));
+        _ = StartCoroutine(GetPublicKeyRoutine(action));
     }
-    IEnumerator GetPublicKeySmart(Action<PublicKeyResponse> action)
+
+    private IEnumerator GetPublicKeyRoutine(Action<PublicKeyResponse> action)
     {
-        UnityWebRequest webRequest = new(URI + "/Pubkey", "GET");
-        webRequest.downloadHandler = new DownloadHandlerBuffer();
+        UnityWebRequest webRequest =
+            new(uri + "/Pubkey", "GET") { downloadHandler = new DownloadHandlerBuffer() };
 
         yield return webRequest.SendWebRequest();
 
         action(JsonUtility.FromJson<PublicKeyResponse>(webRequest.downloadHandler.text));
         webRequest.Dispose();
     }
+
     [Serializable]
     public class PublicKeyResponse
     {
-        public string pubkey;
+        public string PublicKey;
     }
-    #endregion
-    #region Вход в систему
+
     public class LogInData
     {
-        public string login;
-        public string password;
+        public string Login;
+        public string Password;
+
         public LogInData(string login, string password)
         {
-            this.login = login;
-            this.password = password;
+            Login = login;
+            Password = password;
         }
     }
+
     public void LogIn(LogInData data, Action<long> action)
     {
-        Login = data.login;
-        byte[] Data = Encoding.UTF8.GetBytes(data.password);
-        HashedPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(Data));
-        StartCoroutine(LogInSmart(action));
+        login = data.Login;
+        byte[] _data = Encoding.UTF8.GetBytes(data.Password);
+        hashedPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(_data));
+        _ = StartCoroutine(LogInRoutine(action));
     }
-    IEnumerator LogInSmart(Action<long> action)
+
+    private IEnumerator LogInRoutine(Action<long> action)
     {
-        UnityWebRequest webRequest = new(URI + $"/User/{Login}", "POST");
+        UnityWebRequest webRequest = new(uri + $"/User/{login}", "POST");
         string nonce = GetNonce();
         webRequest.SetRequestHeader("Nonce", nonce);
-        byte[] Data = Encoding.UTF8.GetBytes(Login + nonce + HashedPassword);
-        webRequest.SetRequestHeader("Signature", Convert.ToBase64String(SHA256.Create().ComputeHash(Data)));
+        byte[] Data = Encoding.UTF8.GetBytes(login + nonce + hashedPassword);
+        webRequest.SetRequestHeader(
+            "Signature",
+            Convert.ToBase64String(SHA256.Create().ComputeHash(Data))
+        );
 
         yield return webRequest.SendWebRequest();
 
         action(webRequest.responseCode);
         webRequest.Dispose();
     }
-    #endregion
-    #region Регистрация
+
     [Serializable]
     public class RegistrationOpenData
     {
-        public string login;
-        public string email;
-        public string password;
+        public string Login;
+        public string Email;
+        public string Password;
+
         public RegistrationOpenData(string login, string email, string password)
         {
-            this.login = login;
-            this.email = email;
-            this.password = password;
+            Login = login;
+            Email = email;
+            Password = password;
         }
     }
+
     public class RegistrationData
     {
-        public string login;
-        public string nonce_email;
-        public string nonce;
-        public string password;
+        public string Login;
+        public string NonceWithEmail;
+        public string Nonce;
+        public string Password;
     }
+
     public void Registration(RegistrationOpenData data, Action<long> action)
     {
-        RegistrationData local_data = new();
-        // Login
-        local_data.login = data.login;
-        // Nonce
-        local_data.nonce = GetNonce();
+        RegistrationData local_data = new() { Login = data.Login, Nonce = GetNonce() };
         //Email
-        byte[] Data = Encoding.UTF8.GetBytes(data.email + local_data.nonce);
-        local_data.nonce_email = Convert.ToBase64String(SHA256.Create().ComputeHash(Data));
+        byte[] Data = Encoding.UTF8.GetBytes(data.Email + local_data.Nonce);
+        local_data.NonceWithEmail = Convert.ToBase64String(SHA256.Create().ComputeHash(Data));
         //Password
-        byte[] Data1 = Encoding.UTF8.GetBytes(data.password);
+        byte[] Data1 = Encoding.UTF8.GetBytes(data.Password);
         string hashed_password = Convert.ToBase64String(SHA256.Create().ComputeHash(Data1));
 
-        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(PublicKey);
+        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
         RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
-        local_data.password = Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(hashed_password), padding));
+        local_data.Password = Convert.ToBase64String(
+            rsa.Encrypt(Encoding.UTF8.GetBytes(hashed_password), padding)
+        );
 
-        StartCoroutine(RegistrationSmart(local_data, action));
+        _ = StartCoroutine(RegistrationRoutine(local_data, action));
     }
-    IEnumerator RegistrationSmart(RegistrationData data, Action<long> action)
+
+    private IEnumerator RegistrationRoutine(RegistrationData data, Action<long> action)
     {
-        UnityWebRequest webRequest = new(URI + "/User", "POST");
-        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        UnityWebRequest webRequest =
+            new(uri + "/User", "POST")
+            {
+                uploadHandler = new UploadHandlerRaw(
+                    Encoding.UTF8.GetBytes(JsonUtility.ToJson(data))
+                )
+            };
         webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         yield return webRequest.SendWebRequest();
@@ -132,85 +143,101 @@ public class ServerSpeaker : MonoBehaviour
         action(webRequest.responseCode);
         webRequest.Dispose();
     }
-    #endregion
-    #region Запросить смену пароля
-    public class WhantChangePasswordOpenData
+
+    public class RequestToChangePasswordOpenData
     {
-        public string email;
-        public WhantChangePasswordOpenData(string email)
+        public string Email;
+
+        public RequestToChangePasswordOpenData(string email)
         {
-            this.email = email;
+            Email = email;
         }
     }
-    class WhantChangePasswordData
+
+    private class RequestToChangePasswordData
     {
-        public string nonce_email;
-        public string nonce;
+        public string NonceWithEmail;
+        public string Nonce;
     }
-    public void WhantChangePassword(WhantChangePasswordOpenData data, Action<long> action)
+
+    public void RequestToChangePassword(RequestToChangePasswordOpenData data, Action<long> responce)
     {
-        WhantChangePasswordData local_data = new();
-        local_data.nonce = GetNonce();
-        byte[] Data = Encoding.UTF8.GetBytes(data.email + local_data.nonce);
-        local_data.nonce_email = Convert.ToBase64String(SHA256.Create().ComputeHash(Data));
-        StartCoroutine(WhantChangePasswordSmart(local_data, action));
+        RequestToChangePasswordData localData = new() { Nonce = GetNonce() };
+        byte[] _data = Encoding.UTF8.GetBytes(data.Email + localData.Nonce);
+        localData.NonceWithEmail = Convert.ToBase64String(SHA256.Create().ComputeHash(_data));
+        _ = StartCoroutine(RequestToChangePasswordRoutine(localData, responce));
     }
-    IEnumerator WhantChangePasswordSmart(WhantChangePasswordData data, Action<long> action)
+
+    private IEnumerator RequestToChangePasswordRoutine(
+        RequestToChangePasswordData data,
+        Action<long> responce
+    )
     {
-        UnityWebRequest webRequest = new(URI + "/User/Password", "POST");
-        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        UnityWebRequest webRequest =
+            new(uri + "/User/Password", "POST")
+            {
+                uploadHandler = new UploadHandlerRaw(
+                    Encoding.UTF8.GetBytes(JsonUtility.ToJson(data))
+                )
+            };
         webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         yield return webRequest.SendWebRequest();
 
-        action(webRequest.responseCode);
+        responce(webRequest.responseCode);
         webRequest.Dispose();
     }
-    #endregion
-    #region Смена пароля
+
     public class ChangePasswordOpenData
     {
-        public string access_code;
-        public string new_password;
-        public string email;
+        public string AccessCode;
+        public string NewPassword;
+        public string Email;
+
         public ChangePasswordOpenData(string access_code, string new_password, string email)
         {
-            this.access_code = access_code;
-            this.new_password = new_password;
-            this.email = email;
+            AccessCode = access_code;
+            NewPassword = new_password;
+            Email = email;
         }
     }
+
     public class ChangePasswordData
     {
-        public string access_code;
-        public string new_password;
-        public string nonce_email;
-        public string nonce;
+        public string AccessCode;
+        public string NewPassword;
+        public string NonceWithEmail;
+        public string Nonce;
     }
+
     public void ChangePassword(ChangePasswordOpenData data, Action<long> action)
     {
-        ChangePasswordData local_data = new();
-        // Access code
-        local_data.access_code = data.access_code;
-        // Nonce
-        local_data.nonce = GetNonce();
-        // Nonce Email
-        byte[] Data = Encoding.UTF8.GetBytes(data.email + local_data.nonce);
-        local_data.nonce_email = Convert.ToBase64String(SHA256.Create().ComputeHash(Data));
-        // New Password
-        byte[] Data1 = Encoding.UTF8.GetBytes(data.new_password);
-        string hashed_newpassword = Convert.ToBase64String(SHA256.Create().ComputeHash(Data1));
+        ChangePasswordData localData = new() { AccessCode = data.AccessCode, Nonce = GetNonce() };
 
-        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(PublicKey);
+        byte[] _data = Encoding.UTF8.GetBytes(data.Email + localData.Nonce);
+        localData.NonceWithEmail = Convert.ToBase64String(SHA256.Create().ComputeHash(_data));
+
+        byte[] _data1 = Encoding.UTF8.GetBytes(data.NewPassword);
+        string hashedNewPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(_data1));
+
+        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
         RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
-        local_data.new_password = Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(hashed_newpassword), padding));
+        localData.NewPassword = Convert.ToBase64String(
+            rsa.Encrypt(Encoding.UTF8.GetBytes(hashedNewPassword), padding)
+        );
 
-        StartCoroutine(ChangePasswordSmart(local_data, action));
+        _ = StartCoroutine(ChangePasswordRoutine(localData, action));
     }
-    IEnumerator ChangePasswordSmart(ChangePasswordData data, Action<long> action)
+
+    private IEnumerator ChangePasswordRoutine(ChangePasswordData data, Action<long> action)
     {
-        UnityWebRequest webRequest = new(URI + "/User/Password", "PATCH");
-        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(data)));
+        UnityWebRequest webRequest =
+            new(uri + "/User/Password", "PATCH")
+            {
+                uploadHandler = new UploadHandlerRaw(
+                    Encoding.UTF8.GetBytes(JsonUtility.ToJson(data))
+                )
+            };
         webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         yield return webRequest.SendWebRequest();
@@ -218,5 +245,4 @@ public class ServerSpeaker : MonoBehaviour
         action(webRequest.responseCode);
         webRequest.Dispose();
     }
-    #endregion
 }

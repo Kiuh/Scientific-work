@@ -5,33 +5,39 @@ using UnityEngine.EventSystems;
 public class ButtonSendCode : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
-    ButtonSendNewPassword BSNP;
+    private ButtonSendNewPassword buttonSendNewPassword;
+
     [SerializeField]
-    TMP_Text email;
+    private TMP_Text email;
+
     [SerializeField]
-    GameObject code_input;
+    private GameObject code_input;
+
     [SerializeField]
-    GameObject myself;
-    ServerSpeaker ss;
+    private GameObject myself;
+    private ServerSpeaker ss;
+
     public void Start()
     {
         ss = FindObjectOfType<ServerSpeaker>();
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(email.text == "")
+        if (email.text == "")
         {
             Debug.Log("Loh!");
             return;
         }
-        var data = new ServerSpeaker.WhantChangePasswordOpenData(email.text);
-        ss.WhantChangePassword(data, AfterClick);
+        ServerSpeaker.RequestToChangePasswordOpenData data = new(email.text);
+        ss.RequestToChangePassword(data, AfterClick);
     }
+
     public void AfterClick(long status_code)
     {
-        if(status_code == 200)
+        if (status_code == 200)
         {
-            BSNP.email = email.text;
+            buttonSendNewPassword.Email = email.text;
             code_input.SetActive(true);
             myself.SetActive(false);
         }
