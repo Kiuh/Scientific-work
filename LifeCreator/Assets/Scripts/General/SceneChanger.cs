@@ -11,11 +11,11 @@ public class SceneChanger : MonoBehaviour
     [SerializeField]
     private GameObject panel;
 
-    [SerializeField]
     private Canvas canvas;
 
     private void Awake()
     {
+        canvas = FindObjectOfType<Canvas>();
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -38,6 +38,7 @@ public class SceneChanger : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        canvas = FindObjectOfType<Canvas>();
         _ = StartCoroutine(SceneStart());
     }
 

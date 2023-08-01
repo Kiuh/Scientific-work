@@ -118,11 +118,11 @@ public class ServerSpeaker : MonoBehaviour
         byte[] Data1 = Encoding.UTF8.GetBytes(data.Password);
         string hashed_password = Convert.ToBase64String(SHA256.Create().ComputeHash(Data1));
 
-        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
-        RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
-        local_data.Password = Convert.ToBase64String(
-            rsa.Encrypt(Encoding.UTF8.GetBytes(hashed_password), padding)
-        );
+        //RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
+        //RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
+        //local_data.Password = Convert.ToBase64String(
+        //    rsa.Encrypt(Encoding.UTF8.GetBytes(hashed_password), padding)
+        //);
 
         _ = StartCoroutine(RegistrationRoutine(local_data, action));
     }
@@ -220,11 +220,11 @@ public class ServerSpeaker : MonoBehaviour
         byte[] _data1 = Encoding.UTF8.GetBytes(data.NewPassword);
         string hashedNewPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(_data1));
 
-        RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
-        RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
-        localData.NewPassword = Convert.ToBase64String(
-            rsa.Encrypt(Encoding.UTF8.GetBytes(hashedNewPassword), padding)
-        );
+        //RSACryptoServiceProvider rsa = RSAKeys.ImportPublicKey(publicKey);
+        //RSAEncryptionPadding padding = RSAEncryptionPadding.OaepSHA256;
+        //localData.NewPassword = Convert.ToBase64String(
+        //    rsa.Encrypt(Encoding.UTF8.GetBytes(hashedNewPassword), padding)
+        //);
 
         _ = StartCoroutine(ChangePasswordRoutine(localData, action));
     }
