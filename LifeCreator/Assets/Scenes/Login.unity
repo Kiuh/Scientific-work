@@ -641,12 +641,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &104227978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2095,12 +2095,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &512034458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2508,12 +2508,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &582957660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2727,12 +2727,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &621227539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2781,10 +2781,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Email: 
-  access_code: {fileID: 359011390}
-  new_password: {fileID: 621693114}
+  accessCode: {fileID: 0}
+  newPassword: {fileID: 0}
   myself: {fileID: 2025772394}
-  success_change: {fileID: 2118761278}
+  successChange: {fileID: 0}
 --- !u!1 &621693112
 GameObject:
   m_ObjectHideFlags: 0
@@ -3453,12 +3453,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &704068544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4177,12 +4177,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &886801303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4459,12 +4459,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &902365559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5973,12 +5973,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &1525898352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6249,12 +6249,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f6a0588042f78b4d80dbac78833f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_scale: 1
-  hover_scale: 1.05
-  change_speed: 7
+  startScale: 1
+  hoverScale: 1.05
+  changeSpeed: 7
   hovered: 0
-  true_start_scale: 0
-  true_hover_scale: 0
+  trueStartScale: 0
+  trueHoverScale: 0
 --- !u!114 &1676371428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6304,7 +6304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonSendNewPassword: {fileID: 0}
   email: {fileID: 1989651220}
-  code_input: {fileID: 2025772394}
+  codeInput: {fileID: 0}
   myself: {fileID: 1543265688}
 --- !u!1 &1770672340
 GameObject:

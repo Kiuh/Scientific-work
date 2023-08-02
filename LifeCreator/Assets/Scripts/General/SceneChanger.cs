@@ -20,12 +20,12 @@ public class SceneChanger : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void LoadScene(string scene_name)
+    public void LoadScene(string sceneName)
     {
-        _ = StartCoroutine(SceneEnd(scene_name));
+        _ = StartCoroutine(SceneEnd(sceneName));
     }
 
-    private IEnumerator SceneEnd(string scene_name)
+    private IEnumerator SceneEnd(string sceneName)
     {
         Image image = Instantiate(panel, canvas.transform).GetComponent<Image>();
         for (float visible = 0f; visible < 1; visible += fadeSpeed)
@@ -33,7 +33,7 @@ public class SceneChanger : MonoBehaviour
             image.color = new Color(image.color.r, image.color.g, image.color.b, visible);
             yield return null;
         }
-        SceneManager.LoadScene(scene_name);
+        SceneManager.LoadScene(sceneName);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

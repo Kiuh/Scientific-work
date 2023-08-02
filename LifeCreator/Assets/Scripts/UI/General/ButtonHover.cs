@@ -4,44 +4,44 @@ using UnityEngine.EventSystems;
 public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField]
-    private float start_scale = 1f;
+    private float startScale = 1f;
 
     [SerializeField]
-    private float hover_scale = 1.05f;
+    private float hoverScale = 1.05f;
 
     [SerializeField]
-    private float change_speed = 7f;
+    private float changeSpeed = 7f;
 
     [SerializeField]
     private bool hovered = false;
 
     [Space]
     [SerializeField]
-    private float true_start_scale;
+    private float trueStartScale;
 
     [SerializeField]
-    private float true_hover_scale;
-    private RectTransform rt;
+    private float trueHoverScale;
+    private RectTransform rectTransform;
 
     public void Start()
     {
-        rt = GetComponent<RectTransform>();
-        true_start_scale = rt.localScale.x * start_scale;
-        true_hover_scale = rt.localScale.x * hover_scale;
+        rectTransform = GetComponent<RectTransform>();
+        trueStartScale = rectTransform.localScale.x * startScale;
+        trueHoverScale = rectTransform.localScale.x * hoverScale;
     }
 
     public void Update()
     {
-        rt.localScale = hovered
+        rectTransform.localScale = hovered
             ? Vector3.Lerp(
-                rt.localScale,
-                new Vector3(true_hover_scale, true_hover_scale, true_hover_scale),
-                Time.deltaTime * change_speed
+                rectTransform.localScale,
+                new Vector3(trueHoverScale, trueHoverScale, trueHoverScale),
+                Time.deltaTime * changeSpeed
             )
             : Vector3.Lerp(
-                rt.localScale,
-                new Vector3(true_start_scale, true_start_scale, true_start_scale),
-                Time.deltaTime * change_speed
+                rectTransform.localScale,
+                new Vector3(trueStartScale, trueStartScale, trueStartScale),
+                Time.deltaTime * changeSpeed
             );
     }
 

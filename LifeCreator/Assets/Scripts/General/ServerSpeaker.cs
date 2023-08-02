@@ -160,12 +160,12 @@ public class ServerSpeaker : MonoBehaviour
         public string Nonce;
     }
 
-    public void RequestToChangePassword(RequestToChangePasswordOpenData data, Action<long> responce)
+    public void RequestToChangePassword(RequestToChangePasswordOpenData data, Action<long> response)
     {
         RequestToChangePasswordData localData = new() { Nonce = GetNonce() };
         byte[] _data = Encoding.UTF8.GetBytes(data.Email + localData.Nonce);
         localData.NonceWithEmail = Convert.ToBase64String(SHA256.Create().ComputeHash(_data));
-        _ = StartCoroutine(RequestToChangePasswordRoutine(localData, responce));
+        _ = StartCoroutine(RequestToChangePasswordRoutine(localData, response));
     }
 
     private IEnumerator RequestToChangePasswordRoutine(
@@ -194,10 +194,10 @@ public class ServerSpeaker : MonoBehaviour
         public string NewPassword;
         public string Email;
 
-        public ChangePasswordOpenData(string access_code, string new_password, string email)
+        public ChangePasswordOpenData(string accessCode, string newPassword, string email)
         {
-            AccessCode = access_code;
-            NewPassword = new_password;
+            AccessCode = accessCode;
+            NewPassword = newPassword;
             Email = email;
         }
     }

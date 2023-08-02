@@ -11,15 +11,15 @@ public class ButtonSendCode : MonoBehaviour, IPointerClickHandler
     private TMP_Text email;
 
     [SerializeField]
-    private GameObject code_input;
+    private GameObject codeInput;
 
     [SerializeField]
     private GameObject myself;
-    private ServerSpeaker ss;
+    private ServerSpeaker serverSpeaker;
 
     public void Start()
     {
-        ss = FindObjectOfType<ServerSpeaker>();
+        serverSpeaker = FindObjectOfType<ServerSpeaker>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -30,7 +30,7 @@ public class ButtonSendCode : MonoBehaviour, IPointerClickHandler
             return;
         }
         ServerSpeaker.RequestToChangePasswordOpenData data = new(email.text);
-        ss.RequestToChangePassword(data, AfterClick);
+        serverSpeaker.RequestToChangePassword(data, AfterClick);
     }
 
     public void AfterClick(long status_code)
@@ -38,7 +38,7 @@ public class ButtonSendCode : MonoBehaviour, IPointerClickHandler
         if (status_code == 200)
         {
             buttonSendNewPassword.Email = email.text;
-            code_input.SetActive(true);
+            codeInput.SetActive(true);
             myself.SetActive(false);
         }
         else

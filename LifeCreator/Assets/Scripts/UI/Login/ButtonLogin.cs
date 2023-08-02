@@ -24,16 +24,16 @@ public class ButtonLogin : MonoBehaviour, IPointerClickHandler
         ss.LogIn(data, AfterLogin);
     }
 
-    private void AfterLogin(long status_code)
+    private void AfterLogin(long statusCode)
     {
-        if (status_code == 200)
+        if (statusCode == 200)
         {
             changer.LoadScene("Menu");
             Debug.Log("All good");
         }
         else
         {
-            Debug.LogWarning(status_code);
+            Debug.LogWarning(statusCode);
         }
     }
 }

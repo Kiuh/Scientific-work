@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonSetUstetActive : MonoBehaviour, IPointerClickHandler
+public class ButtonSetUnsetActive : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
     private GameObject target;
