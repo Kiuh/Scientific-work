@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEditor;
 
 namespace EasyTransition
@@ -13,6 +12,5 @@ namespace EasyTransition
             EditorGUILayout.Space();
         }
     }
-
 }
-    
+

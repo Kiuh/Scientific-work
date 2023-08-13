@@ -346,7 +346,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -951,7 +951,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1109,7 +1109,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1332,7 +1332,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -2026,7 +2026,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2297,7 +2297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -2551,7 +2551,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -6600,10 +6600,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   back: {fileID: 7877748591486489068}
   register: {fileID: 8937077535438720168}
-  login: {fileID: 1239422973}
-  email: {fileID: 749516515}
-  password: {fileID: 682778677}
-  repeatPassword: {fileID: 18613613}
+  loginField: {fileID: 1239422973}
+  emailField: {fileID: 749516515}
+  passwordField: {fileID: 682778677}
+  repeatPasswordField: {fileID: 18613613}
   error: {fileID: 4189768838786157777}
   successRegistration: {fileID: 8164067590158248814}
   transitionSettings: {fileID: 11400000, guid: 013263c83b6a84c4d95beaa8bd163ac8, type: 2}

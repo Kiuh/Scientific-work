@@ -39,24 +39,12 @@ namespace MainMenu.Managers
             TransitionManager.Instance().Transition("Login", transitionSettings, 0);
         }
 
-        private void Generations()
-        {
+        private void Generations() { }
 
-        }
+        private void Cells() { }
 
-        private void Cells()
-        {
+        private void Info() { }
 
-        }
-
-        private void Info()
-        {
-
-        }
-
-        private void CreateGeneration()
-        {
-
-        }
+        private void CreateGeneration() { }
     }
 }

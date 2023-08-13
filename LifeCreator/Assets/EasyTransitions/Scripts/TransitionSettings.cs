@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 namespace EasyTransition
 {
@@ -7,13 +5,13 @@ namespace EasyTransition
     [CreateAssetMenu(fileName = "TransitionSettings", menuName = "Florian Butz/New Transition Settings", order = 0)]
     public class TransitionSettings : ScriptableObject
     {
-        [HideInInspector]   public Material multiplyColorMaterial;
-        [HideInInspector]   public Material addColorMaterial;
+        [HideInInspector] public Material multiplyColorMaterial;
+        [HideInInspector] public Material addColorMaterial;
 
         [Header("Transition Settings")]
 
         [Tooltip("The resolution of the canvas the transition was made in. For some transitions this might change.")]
-        public Vector2 refrenceResolution = new Vector2(1920, 1080);
+        public Vector2 refrenceResolution = new(1920, 1080);
 
         [Tooltip("If set to true you can't interact with any UI until the transition is over.")]
         public bool blockRaycasts = true;

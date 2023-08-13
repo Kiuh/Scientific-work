@@ -1,6 +1,8 @@
 using EasyTransition;
+using General;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace LoginMenu.Managers
@@ -21,10 +23,10 @@ namespace LoginMenu.Managers
         private TMP_Text error;
 
         [SerializeField]
-        private TMP_InputField loginEmail;
+        private TMP_InputField loginField;
 
         [SerializeField]
-        private TMP_InputField password;
+        private TMP_InputField passwordField;
 
         [SerializeField]
         private TransitionSettings transitionSettings;
@@ -42,9 +44,26 @@ namespace LoginMenu.Managers
 
         private void LogIn()
         {
-            loginEmail.text = "Haha";
-            password.text = "Haha";
-            TransitionManager.Instance().Transition("MainMenu", transitionSettings, 0);
+            _ = StartCoroutine(
+                ServerSpeaker.Instance.LogIn(
+                    new ServerSpeaker.LogInOpenData(loginField.text, passwordField.text),
+                    LogInEnd
+                )
+            );
+            LoadingPause.Instance.ShowLoading("Verification");
+        }
+
+        private void LogInEnd(UnityWebRequest webRequest)
+        {
+            LoadingPause.Instance.HideLoading();
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                TransitionManager.Instance().Transition("MainMenu", transitionSettings, 0);
+            }
+            else
+            {
+                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+            }
         }
 
         private void Registration()
@@ -63,8 +82,8 @@ namespace LoginMenu.Managers
             login.interactable = interactable;
             registration.interactable = interactable;
             forgotPassword.interactable = interactable;
-            loginEmail.interactable = interactable;
-            password.interactable = interactable;
+            loginField.interactable = interactable;
+            passwordField.interactable = interactable;
         }
     }
 }

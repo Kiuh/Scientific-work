@@ -381,6 +381,65 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &214783300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 214783303}
+  - component: {fileID: 214783302}
+  - component: {fileID: 214783301}
+  m_Layer: 0
+  m_Name: Global
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &214783301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214783300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d92bde629bce4344d93052536f516393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingPausePrefab: {fileID: 8029898446637866514, guid: 508d05a3fcf45244fba80fb93a525be3, type: 3}
+  delaySeconds: 1
+--- !u!114 &214783302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214783300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76fe67e924ce7543b290d2584b12c4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &214783303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214783300}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &291775485
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,7 +988,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1630,8 +1689,8 @@ MonoBehaviour:
   registration: {fileID: 4211368077362332326}
   forgotPassword: {fileID: 5240459682120001106}
   error: {fileID: 5979911675497995240}
-  loginEmail: {fileID: 2037408308}
-  password: {fileID: 558243941}
+  loginField: {fileID: 2037408308}
+  passwordField: {fileID: 558243941}
   transitionSettings: {fileID: 11400000, guid: 013263c83b6a84c4d95beaa8bd163ac8, type: 2}
   forgotPassManager: {fileID: 8393680121714685967}
 --- !u!1 &1329469447
@@ -2690,7 +2749,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Sample text
+  m_Text: SampleText
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2875,7 +2934,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -4797,7 +4856,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sample text\u200B"
+  m_text: "SampleText\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
@@ -12577,7 +12636,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Login or Email*
+  m_text: Login*
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 444e29794ebbc3840ad5f71cb17455e5, type: 2}
   m_sharedMaterial: {fileID: 207520082319598666, guid: 444e29794ebbc3840ad5f71cb17455e5, type: 2}
