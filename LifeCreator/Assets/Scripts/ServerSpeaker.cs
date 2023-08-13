@@ -62,23 +62,28 @@ namespace General
         private class LogInData
         {
             public string Signature;
+            public string Nonce;
         }
 
         public IEnumerator LogIn(LogInOpenData data, Action<UnityWebRequest> action)
         {
             string nonce = Nonce;
             LogInData logInData =
-                new() { Signature = (data.Login + nonce + data.Password.GetHash()).GetHash() };
+                new()
+                {
+                    Signature = (data.Login + nonce + data.Password.GetHash()).GetHash(),
+                    Nonce = nonce
+                };
+
+            string bodyJson = JsonUtility.ToJson(logInData);
 
             UnityWebRequest webRequest =
                 new(baseURI + $"/Users/LogIn", "POST")
                 {
-                    uploadHandler = new UploadHandlerRaw(
-                        Encoding.UTF8.GetBytes(JsonUtility.ToJson(logInData))
-                    ),
+                    uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(bodyJson)),
                     downloadHandler = new DownloadHandlerBuffer()
                 };
-            webRequest.SetRequestHeader("Nonce", Nonce);
+            webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
             yield return webRequest.SendWebRequest();
 

@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Hierarchy
   m_RootView: {fileID: 7}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -69,8 +69,8 @@ MonoBehaviour:
     y: 0
     width: 267
     height: 709
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 88
+  controlID: 61
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 99
+  controlID: 59
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 87
+  controlID: 60
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -411,22 +411,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\kyltu\Desktop\GitHub\Scientific-work\LifeCreator
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 83}
-    m_SelectedIDs: 7e5c0000
-    m_LastClickedID: 23678
-    m_ExpandedIDs: 000000005c5c00005e5c0000605c0000625c0000645c000000ca9a3b
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: 185e0000
+    m_LastClickedID: 24088
+    m_ExpandedIDs: 00000000185e00001a5e00001c5e00001e5e0000205e000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -454,7 +454,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000005c5c00005e5c0000605c0000625c0000645c0000
+    m_ExpandedIDs: 00000000185e00001a5e00001c5e00001e5e0000205e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -509,7 +509,7 @@ MonoBehaviour:
     m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
   m_SkipHiddenPackages: 0
-  m_DirectoriesAreaWidth: 207
+  m_DirectoriesAreaWidth: 211
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -571,8 +571,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 0
-    y: 73
+    x: -32000
+    y: -31970
     width: 266
     height: 688
   m_ViewDataDictionary: {fileID: 0}
@@ -582,9 +582,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 845c0000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 205cffff6a5effffc868ffff7e6bffff668affff008cffff2ac9ffffc0c9ffff42caffff2cfbffff505300005c74000068740000fe7500008076000098760000eace00002acf000066cf0000cccf0000facf00004cd0000058d0000086d0000070f80000b0f800005afe00009afe000000160100401601007c160100621701006e170100
+      m_ExpandedIDs: a283ffff708affffdc8affff40b8ffff3ebfffff00cbffff2cfbfffff4ffffff06530000125300000e5400003a540000b0540000f8540000325500004a5500003c560000aeb80000eeb800005ad000009ad0000044d6000084d60000542f0100ca2f01004c300100643001005631010026470100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -888,9 +888,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 608.75543, y: 380.8987, z: 3.5180352}
+    m_Target: {x: 616.1969, y: 356.95102, z: 1.7327964}
     speed: 2
-    m_Value: {x: 608.75543, y: 380.8987, z: 3.5180352}
+    m_Value: {x: 616.1969, y: 356.95102, z: 1.7327964}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -941,9 +941,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 267.0109
+    m_Target: 445.5349
     speed: 2
-    m_Value: 267.0109
+    m_Value: 445.5349
   m_Ortho:
     m_Target: 1
     speed: 2

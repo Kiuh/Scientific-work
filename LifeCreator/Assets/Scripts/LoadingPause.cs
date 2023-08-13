@@ -8,8 +8,8 @@ namespace General
     {
         [SerializeField]
         private GameObject loadingPausePrefab;
-        [SerializeField]
-        private float delaySeconds;
+
+        private static float delaySeconds = 0.3f;
         private TMP_Text loadingText;
         private int dotsCount = 0;
 
@@ -26,7 +26,10 @@ namespace General
 
         public void ShowLoading(string text)
         {
-            GameObject instance = Canvas.Instantiate(loadingPausePrefab);
+            GameObject instance = Instantiate(
+                loadingPausePrefab,
+                FindObjectOfType<Canvas>().transform
+            );
             loadingText = instance.GetComponentInChildren<TMP_Text>();
             _ = loadingText.StartCoroutine(LoadingRoutine(text, loadingText));
         }
