@@ -2,24 +2,23 @@
 using CryptoNet;
 using System;
 using System.Collections;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace General
+namespace Networking
 {
-    public class ServerSpeaker : MonoBehaviour
+    public class ServerProvider : MonoBehaviour
     {
-        private string baseURI = "https://localhost:5000";
-        private string jwtToken;
+        private UnityWebRequestBuilder requestBuilder;
         private ICryptoNet rsa;
 
         private string Nonce => Convert.ToString(DateTimeOffset.Now.ToUnixTimeMilliseconds());
 
-        public static ServerSpeaker Instance { get; private set; }
+        public static ServerProvider Instance { get; private set; }
 
         private void Awake()
         {
+            requestBuilder = new("https://localhost:5000");
             DontDestroyOnLoad(this);
             if (Instance == null)
             {
@@ -30,11 +29,7 @@ namespace General
 
         private IEnumerator GetPublicKey()
         {
-            UnityWebRequest webRequest =
-                new(baseURI + "/PublicKey", "GET")
-                {
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
+            UnityWebRequest webRequest = requestBuilder.CreateRequest("/PublicKey", HttpMethod.Get);
 
             yield return webRequest.SendWebRequest();
 
@@ -76,21 +71,17 @@ namespace General
                     Nonce = nonce
                 };
 
-            string bodyJson = JsonUtility.ToJson(logInData);
-
-            UnityWebRequest webRequest =
-                new(baseURI + $"/Users/LogIn", "POST")
-                {
-                    uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(bodyJson)),
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-            webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            UnityWebRequest webRequest = requestBuilder.CreateRequest(
+                "/Users/LogIn",
+                HttpMethod.Post,
+                logInData
+            );
 
             yield return webRequest.SendWebRequest();
 
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
-                jwtToken = webRequest.GetResponseHeader("JwtBearerToken");
+                requestBuilder.SetToken(webRequest.GetResponseHeader("JwtBearerToken"));
             }
 
             action(webRequest);
@@ -123,7 +114,7 @@ namespace General
         public IEnumerator Registration(RegistrationOpenData data, Action<UnityWebRequest> action)
         {
             string nonce = Nonce;
-            RegistrationData localData =
+            RegistrationData registrationData =
                 new()
                 {
                     Login = data.Login,
@@ -132,15 +123,11 @@ namespace General
                     EncryptedHashedPassword = data.Password.GetHash().GetEncrypted(rsa)
                 };
 
-            string localDataJson = JsonUtility.ToJson(localData);
-
-            UnityWebRequest webRequest =
-                new(baseURI + "/Users", "POST")
-                {
-                    uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(localDataJson)),
-                    downloadHandler = new DownloadHandlerBuffer()
-                };
-            webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            UnityWebRequest webRequest = requestBuilder.CreateRequest(
+                "/Users",
+                HttpMethod.Post,
+                registrationData
+            );
 
             yield return webRequest.SendWebRequest();
 

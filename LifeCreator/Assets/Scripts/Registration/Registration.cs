@@ -1,6 +1,7 @@
 ﻿using Common;
 using EasyTransition;
 using General;
+using Networking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -72,8 +73,8 @@ namespace Registration.Managers
             }
 
             _ = StartCoroutine(
-                ServerSpeaker.Instance.Registration(
-                    new ServerSpeaker.RegistrationOpenData(
+                ServerProvider.Instance.Registration(
+                    new ServerProvider.RegistrationOpenData(
                         loginField.text,
                         emailField.text,
                         passwordField.text

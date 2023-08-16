@@ -1,5 +1,6 @@
 using EasyTransition;
 using General;
+using Networking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -45,8 +46,8 @@ namespace LoginMenu.Managers
         private void LogIn()
         {
             _ = StartCoroutine(
-                ServerSpeaker.Instance.LogIn(
-                    new ServerSpeaker.LogInOpenData(loginField.text, passwordField.text),
+                ServerProvider.Instance.LogIn(
+                    new ServerProvider.LogInOpenData(loginField.text, passwordField.text),
                     LogInEnd
                 )
             );
