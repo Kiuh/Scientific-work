@@ -10,7 +10,8 @@ namespace General
 {
     public class ServerSpeaker : MonoBehaviour
     {
-        private string baseURI = "http://localhost:5000";
+        private string baseURI = "https://localhost:5000";
+        private string jwtToken;
         private ICryptoNet rsa;
 
         private string Nonce => Convert.ToString(DateTimeOffset.Now.ToUnixTimeMilliseconds());
@@ -86,6 +87,11 @@ namespace General
             webRequest.SetRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
             yield return webRequest.SendWebRequest();
+
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                jwtToken = webRequest.GetResponseHeader("JwtBearerToken");
+            }
 
             action(webRequest);
             webRequest.Dispose();

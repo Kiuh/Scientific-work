@@ -43,7 +43,7 @@ namespace General
         private IEnumerator LoadingRoutine(string text, MonoBehaviour initiator)
         {
             dotsCount++;
-            dotsCount %= 3;
+            dotsCount %= 4;
             loadingText.text = text + new string('.', dotsCount);
             yield return new WaitForSeconds(delaySeconds);
             _ = initiator.StartCoroutine(LoadingRoutine(text, initiator));
