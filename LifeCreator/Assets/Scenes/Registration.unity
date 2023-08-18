@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: SampleText@gmail.com
+  m_Text: kylturpro@gmail.com
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "SampleText@gmail.com\u200B"
+  m_text: "kylturpro@gmail.com\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
   m_sharedMaterial: {fileID: 4910359196485500276, guid: 1d88ecfe6d445cb4fb65bde6673d6f7f, type: 2}
