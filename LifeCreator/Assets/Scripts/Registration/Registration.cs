@@ -19,6 +19,9 @@ namespace Registration.Managers
         private Button register;
 
         [SerializeField]
+        private Button lostVerificationButton;
+
+        [SerializeField]
         private TMP_InputField loginField;
 
         [SerializeField]
@@ -37,12 +40,16 @@ namespace Registration.Managers
         private SuccessRegistration successRegistration;
 
         [SerializeField]
+        private LostVerification lostVerification;
+
+        [SerializeField]
         private TransitionSettings transitionSettings;
 
         private void Awake()
         {
             back.onClick.AddListener(Back);
             register.onClick.AddListener(Register);
+            lostVerificationButton.onClick.AddListener(LostVerification);
             error.text = string.Empty;
         }
 
@@ -98,9 +105,22 @@ namespace Registration.Managers
             }
         }
 
+        private void LostVerification()
+        {
+            SetInteractive(false);
+            lostVerification.gameObject.SetActive(true);
+        }
+
         private void Back()
         {
-            TransitionManager.Instance().Transition("MainMenu", transitionSettings, 0);
+            TransitionManager.Instance().Transition("Login", transitionSettings, 0);
+        }
+
+        public void SetInteractive(bool value)
+        {
+            back.interactable = value;
+            register.interactable = value;
+            lostVerificationButton.interactable = value;
         }
     }
 }

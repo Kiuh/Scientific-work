@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace LoginMenu.Managers
+namespace Registration.Managers
 {
-    [AddComponentMenu("LoginMenu.Managers.ForgotPassManager")]
-    public class ForgotPassword : MonoBehaviour
+    [AddComponentMenu("Registration.Managers.LostVerification")]
+    public class LostVerification : MonoBehaviour
     {
         [SerializeField]
         private Button close;
@@ -20,10 +20,10 @@ namespace LoginMenu.Managers
         private Button send;
 
         [SerializeField]
-        private Login login;
+        private Registration registration;
 
         [SerializeField]
-        private ContinueForgotPassword successForgotPassManager;
+        private Successfully successfully;
 
         [SerializeField]
         private TMP_Text error;
@@ -37,15 +37,15 @@ namespace LoginMenu.Managers
 
         private void Close()
         {
-            login.SetInteractive(true);
+            registration.SetInteractive(true);
             gameObject.SetActive(false);
         }
 
         private void Send()
         {
             _ = StartCoroutine(
-                ServerProvider.Instance.ForgotPassword(
-                    new ServerProvider.ForgotPasswordOpenData(email.text),
+                ServerProvider.Instance.ResendEmailVerification(
+                    new ServerProvider.ResendEmailVerificationOpenData(email.text),
                     SendEnd
                 )
             );
@@ -58,7 +58,7 @@ namespace LoginMenu.Managers
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
                 gameObject.SetActive(false);
-                successForgotPassManager.gameObject.SetActive(true);
+                successfully.gameObject.SetActive(true);
             }
             else
             {

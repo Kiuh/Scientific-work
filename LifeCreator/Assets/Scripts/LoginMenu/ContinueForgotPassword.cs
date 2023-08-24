@@ -1,5 +1,9 @@
-﻿using TMPro;
+﻿using Common;
+using General;
+using Networking;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace LoginMenu.Managers
@@ -23,7 +27,7 @@ namespace LoginMenu.Managers
         private Button send;
 
         [SerializeField]
-        private Successful successful;
+        private Successfully successful;
 
         [SerializeField]
         private Login login;
@@ -43,10 +47,38 @@ namespace LoginMenu.Managers
 
         private void Send()
         {
-            oneTimeKey.text = "Hehe";
-            newPassword.text = "Hehe";
-            successful.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            Result passwordResult = DataValidator.ValidatePassword(newPassword.text);
+            if (passwordResult.Failure)
+            {
+                error.text = passwordResult.Error;
+                return;
+            }
+            if (!int.TryParse(oneTimeKey.text, out int result))
+            {
+                error.text = "Invalid Access Code!";
+                return;
+            }
+            _ = StartCoroutine(
+                ServerProvider.Instance.RecoverPassword(
+                    new ServerProvider.RecoverPasswordOpenData(result, newPassword.text),
+                    SendEnd
+                )
+            );
+            LoadingPause.Instance.ShowLoading("Registering");
+        }
+
+        private void SendEnd(UnityWebRequest webRequest)
+        {
+            LoadingPause.Instance.HideLoading();
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                successful.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+            }
         }
     }
 }

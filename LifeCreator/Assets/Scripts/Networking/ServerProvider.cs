@@ -72,7 +72,7 @@ namespace Networking
                 };
 
             UnityWebRequest webRequest = requestBuilder.CreateRequest(
-                "/Users/LogIn",
+                "/Authorization/LogIn",
                 HttpMethod.Post,
                 logInData
             );
@@ -124,9 +124,136 @@ namespace Networking
                 };
 
             UnityWebRequest webRequest = requestBuilder.CreateRequest(
-                "/Users",
+                "/Authorization/Registration",
                 HttpMethod.Post,
                 registrationData
+            );
+
+            yield return webRequest.SendWebRequest();
+
+            action(webRequest);
+            webRequest.Dispose();
+        }
+
+        public class ResendEmailVerificationOpenData
+        {
+            public string Email;
+
+            public ResendEmailVerificationOpenData(string email)
+            {
+                Email = email;
+            }
+        }
+
+        [Serializable]
+        public class ResendEmailVerificationData
+        {
+            public string EncryptedNonceWithEmail;
+            public string Nonce;
+        }
+
+        public IEnumerator ResendEmailVerification(
+            ResendEmailVerificationOpenData data,
+            Action<UnityWebRequest> action
+        )
+        {
+            string nonce = Nonce;
+            ResendEmailVerificationData resendEmailVerificationData =
+                new()
+                {
+                    Nonce = nonce,
+                    EncryptedNonceWithEmail = (data.Email + nonce).GetEncrypted(rsa),
+                };
+
+            UnityWebRequest webRequest = requestBuilder.CreateRequest(
+                "/Authorization/ResendEmailVerification",
+                HttpMethod.Post,
+                resendEmailVerificationData
+            );
+
+            yield return webRequest.SendWebRequest();
+
+            action(webRequest);
+            webRequest.Dispose();
+        }
+
+        public class ForgotPasswordOpenData
+        {
+            public string Email;
+
+            public ForgotPasswordOpenData(string email)
+            {
+                Email = email;
+            }
+        }
+
+        [Serializable]
+        public class ForgotPasswordData
+        {
+            public string EncryptedNonceWithEmail;
+            public string Nonce;
+        }
+
+        public IEnumerator ForgotPassword(
+            ForgotPasswordOpenData data,
+            Action<UnityWebRequest> action
+        )
+        {
+            string nonce = Nonce;
+            ForgotPasswordData forgotPasswordData =
+                new()
+                {
+                    Nonce = nonce,
+                    EncryptedNonceWithEmail = (data.Email + nonce).GetEncrypted(rsa),
+                };
+
+            UnityWebRequest webRequest = requestBuilder.CreateRequest(
+                "/Authorization/ForgotPassword",
+                HttpMethod.Post,
+                forgotPasswordData
+            );
+
+            yield return webRequest.SendWebRequest();
+
+            action(webRequest);
+            webRequest.Dispose();
+        }
+
+        public class RecoverPasswordOpenData
+        {
+            public int AccessCode;
+            public string Password;
+
+            public RecoverPasswordOpenData(int accessCode, string password)
+            {
+                AccessCode = accessCode;
+                Password = password;
+            }
+        }
+
+        [Serializable]
+        public class RecoverPasswordData
+        {
+            public int AccessCode;
+            public string EncryptedHashedPassword;
+        }
+
+        public IEnumerator RecoverPassword(
+            RecoverPasswordOpenData data,
+            Action<UnityWebRequest> action
+        )
+        {
+            RecoverPasswordData recoverPasswordData =
+                new()
+                {
+                    AccessCode = data.AccessCode,
+                    EncryptedHashedPassword = data.Password.GetHash().GetEncrypted(rsa),
+                };
+
+            UnityWebRequest webRequest = requestBuilder.CreateRequest(
+                "/Authorization/RecoverPassword",
+                HttpMethod.Post,
+                recoverPasswordData
             );
 
             yield return webRequest.SendWebRequest();

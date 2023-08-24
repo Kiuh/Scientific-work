@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 namespace LoginMenu
 {
-    [AddComponentMenu("LoginMenu.Successful")]
-    public class Successful : MonoBehaviour
+    [AddComponentMenu("LoginMenu.Successfully")]
+    public class Successfully : MonoBehaviour
     {
         [SerializeField]
         private Button close;
