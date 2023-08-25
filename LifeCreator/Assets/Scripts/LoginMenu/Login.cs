@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace LoginMenu.Managers
+namespace LoginMenu
 {
-    [AddComponentMenu("LoginMenu.Managers.Login")]
+    [AddComponentMenu("LoginMenu.Login")]
     public class Login : MonoBehaviour
     {
         [SerializeField]
@@ -46,8 +46,8 @@ namespace LoginMenu.Managers
         private void LogIn()
         {
             _ = StartCoroutine(
-                ServerProvider.Instance.LogIn(
-                    new ServerProvider.LogInOpenData(loginField.text, passwordField.text),
+                ServerProvider.Instance.Login(
+                    new ServerProvider.LoginOpenData(loginField.text, passwordField.text),
                     LogInEnd
                 )
             );
@@ -63,7 +63,7 @@ namespace LoginMenu.Managers
             }
             else
             {
-                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+                error.text = webRequest.error;
             }
         }
 

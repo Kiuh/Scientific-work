@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace Registration.Managers
+namespace Registration
 {
-    [AddComponentMenu("Registration.Managers.Registration")]
+    [AddComponentMenu("Registration.Registration")]
     public class Registration : MonoBehaviour
     {
         [SerializeField]
@@ -40,7 +40,7 @@ namespace Registration.Managers
         private SuccessRegistration successRegistration;
 
         [SerializeField]
-        private LostVerification lostVerification;
+        private ResendRegistration lostVerification;
 
         [SerializeField]
         private TransitionSettings transitionSettings;
@@ -101,7 +101,7 @@ namespace Registration.Managers
             }
             else
             {
-                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+                error.text = webRequest.error;
             }
         }
 

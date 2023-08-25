@@ -2492,7 +2492,7 @@ GameObject:
   - component: {fileID: 734602055}
   - component: {fileID: 734602058}
   m_Layer: 0
-  m_Name: Successfully
+  m_Name: Success Resend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2636,7 +2636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   close: {fileID: 102383861}
-  registration: {fileID: 8135674550276477305}
+  transitionSettings: {fileID: 11400000, guid: 013263c83b6a84c4d95beaa8bd163ac8, type: 2}
 --- !u!1 &749516513
 GameObject:
   m_ObjectHideFlags: 0
@@ -3870,7 +3870,7 @@ GameObject:
   - component: {fileID: 995782815}
   - component: {fileID: 995782818}
   m_Layer: 0
-  m_Name: Verification Lost
+  m_Name: Resend Registration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

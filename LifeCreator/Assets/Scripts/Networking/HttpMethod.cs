@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.Networking;
 
-namespace Common
+namespace Networking
 {
     public enum HttpMethod
     {
@@ -9,7 +9,8 @@ namespace Common
         Delete,
         Post,
         Put,
-        Create
+        Create,
+        Patch
     }
 
     public static class HttpMethodTools
@@ -23,6 +24,7 @@ namespace Common
                 HttpMethod.Post => UnityWebRequest.kHttpVerbPOST,
                 HttpMethod.Put => UnityWebRequest.kHttpVerbPUT,
                 HttpMethod.Create => UnityWebRequest.kHttpVerbCREATE,
+                HttpMethod.Patch => "PATCH",
                 _ => throw new ArgumentException()
             };
         }

@@ -5280,7 +5280,7 @@ GameObject:
   - component: {fileID: 5530501559595019739}
   - component: {fileID: 8100207436451623677}
   m_Layer: 0
-  m_Name: Successfully
+  m_Name: Success ChangePassword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6642,7 +6642,7 @@ GameObject:
   - component: {fileID: 6454924651234691318}
   - component: {fileID: 9209336396731703781}
   m_Layer: 0
-  m_Name: Success Forgot Password
+  m_Name: ChangePassword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10528,7 +10528,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3214039663174144278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7c755a5607cc344db46fdc15d5a772c, type: 3}
+  m_Script: {fileID: 11500000, guid: ee8b286373dc5054a8a831e0a0717fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   close: {fileID: 8822567842807358578}

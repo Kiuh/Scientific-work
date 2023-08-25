@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace Registration.Managers
+namespace Registration
 {
-    [AddComponentMenu("Registration.Managers.LostVerification")]
-    public class LostVerification : MonoBehaviour
+    [AddComponentMenu("Registration.ResendRegistration")]
+    public class ResendRegistration : MonoBehaviour
     {
         [SerializeField]
         private Button close;
@@ -23,7 +23,7 @@ namespace Registration.Managers
         private Registration registration;
 
         [SerializeField]
-        private Successfully successfully;
+        private SuccessResend successfully;
 
         [SerializeField]
         private TMP_Text error;
@@ -45,7 +45,7 @@ namespace Registration.Managers
         {
             _ = StartCoroutine(
                 ServerProvider.Instance.ResendEmailVerification(
-                    new ServerProvider.ResendEmailVerificationOpenData(email.text),
+                    new ServerProvider.ResendRegistrationOpenData(email.text),
                     SendEnd
                 )
             );
@@ -62,7 +62,7 @@ namespace Registration.Managers
             }
             else
             {
-                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+                error.text = webRequest.error;
             }
         }
     }

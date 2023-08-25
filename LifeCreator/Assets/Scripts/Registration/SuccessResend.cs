@@ -4,21 +4,21 @@ using UnityEngine.UI;
 
 namespace Registration
 {
-    [AddComponentMenu("Registration.SuccessRegistration")]
-    public class SuccessRegistration : MonoBehaviour
+    [AddComponentMenu("Registration.Successfully")]
+    public class SuccessResend : MonoBehaviour
     {
         [SerializeField]
-        private Button ok;
+        private Button close;
 
         [SerializeField]
         private TransitionSettings transitionSettings;
 
         private void Awake()
         {
-            ok.onClick.AddListener(Ok);
+            close.onClick.AddListener(Close);
         }
 
-        private void Ok()
+        private void Close()
         {
             TransitionManager.Instance().Transition("Login", transitionSettings, 0);
         }

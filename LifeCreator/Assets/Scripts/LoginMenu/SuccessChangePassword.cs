@@ -1,11 +1,10 @@
-﻿using LoginMenu.Managers;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace LoginMenu
 {
-    [AddComponentMenu("LoginMenu.Successfully")]
-    public class Successfully : MonoBehaviour
+    [AddComponentMenu("LoginMenu.SuccessChangePassword")]
+    public class SuccessChangePassword : MonoBehaviour
     {
         [SerializeField]
         private Button close;

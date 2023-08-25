@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace LoginMenu.Managers
+namespace LoginMenu
 {
-    [AddComponentMenu("LoginMenu.Managers.ForgotPassManager")]
+    [AddComponentMenu("LoginMenu.ForgotPassManager")]
     public class ForgotPassword : MonoBehaviour
     {
         [SerializeField]
@@ -23,7 +23,7 @@ namespace LoginMenu.Managers
         private Login login;
 
         [SerializeField]
-        private ContinueForgotPassword successForgotPassManager;
+        private ChangePassword successForgotPassManager;
 
         [SerializeField]
         private TMP_Text error;
@@ -62,7 +62,7 @@ namespace LoginMenu.Managers
             }
             else
             {
-                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+                error.text = webRequest.error;
             }
         }
     }

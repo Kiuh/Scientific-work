@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using Common;
+
+namespace Networking
 {
     public static class DataValidator
     {

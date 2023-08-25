@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MainMenu.Managers
+namespace MainMenu
 {
-    [AddComponentMenu("MainMenu.Managers.Main")]
+    [AddComponentMenu("MainMenu.Main")]
     public class Main : MonoBehaviour
     {
         [SerializeField]

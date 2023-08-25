@@ -1,5 +1,4 @@
-﻿using Common;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 

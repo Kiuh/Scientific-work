@@ -6,10 +6,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace LoginMenu.Managers
+namespace LoginMenu
 {
-    [AddComponentMenu("LoginMenu.Managers.ContinueForgotPassword")]
-    public class ContinueForgotPassword : MonoBehaviour
+    [AddComponentMenu("LoginMenu.ChangePassword")]
+    public class ChangePassword : MonoBehaviour
     {
         [SerializeField]
         private Button close;
@@ -27,7 +27,7 @@ namespace LoginMenu.Managers
         private Button send;
 
         [SerializeField]
-        private Successfully successful;
+        private SuccessChangePassword successful;
 
         [SerializeField]
         private Login login;
@@ -77,7 +77,7 @@ namespace LoginMenu.Managers
             }
             else
             {
-                error.text = webRequest.error + "\n" + webRequest.downloadHandler.text;
+                error.text = webRequest.error;
             }
         }
     }
