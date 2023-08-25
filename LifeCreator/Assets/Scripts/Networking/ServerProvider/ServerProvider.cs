@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 
 namespace Networking
 {
+    [AddComponentMenu("Networking.ServerProvider")]
     public partial class ServerProvider : MonoBehaviour
     {
         private UnityWebRequestBuilder requestBuilder;

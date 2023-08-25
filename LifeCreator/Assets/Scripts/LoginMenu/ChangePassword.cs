@@ -77,7 +77,7 @@ namespace LoginMenu
             }
             else
             {
-                error.text = webRequest.error;
+                error.text = webRequest.downloadHandler.text.FromErrorBody();
             }
         }
     }
