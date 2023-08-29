@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Registration.unity
     guid: 32de02ed309c58047be57e41839323e3
+  - enabled: 1
+    path: Assets/Scenes/SIM1.unity
+    guid: 950bd795d4a430e4c9f0e2f3f3b95ffb
+  - enabled: 1
+    path: Assets/Scenes/SIM2.unity
+    guid: 7e733ff19dabb114aabd2e348d744a45
   m_configObjects: {}

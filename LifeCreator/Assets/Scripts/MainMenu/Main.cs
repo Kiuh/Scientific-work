@@ -11,27 +11,23 @@ namespace MainMenu
         private Button quit;
 
         [SerializeField]
-        private Button generations;
-
-        [SerializeField]
-        private Button cells;
-
-        [SerializeField]
-        private Button info;
-
-        [SerializeField]
         private Button createGeneration;
 
         [SerializeField]
         private TransitionSettings transitionSettings;
 
+        [SerializeField]
+        private string sceneName;
+
         private void Awake()
         {
             quit.onClick.AddListener(Quit);
-            generations.onClick.AddListener(Generations);
-            cells.onClick.AddListener(Cells);
-            info.onClick.AddListener(Info);
             createGeneration.onClick.AddListener(CreateGeneration);
+        }
+
+        public void SetSceneString(string sceneName)
+        {
+            this.sceneName = sceneName;
         }
 
         private void Quit()
@@ -39,12 +35,9 @@ namespace MainMenu
             TransitionManager.Instance().Transition("Login", transitionSettings, 0);
         }
 
-        private void Generations() { }
-
-        private void Cells() { }
-
-        private void Info() { }
-
-        private void CreateGeneration() { }
+        private void CreateGeneration()
+        {
+            TransitionManager.Instance().Transition(sceneName, transitionSettings, 0);
+        }
     }
 }
