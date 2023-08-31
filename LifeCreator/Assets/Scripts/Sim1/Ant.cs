@@ -9,6 +9,7 @@ namespace Scripts.Sim1
     public enum AntState
     {
         SearchingFood,
+        RandomMoving,
         SearchingHome
     }
 
@@ -18,142 +19,170 @@ namespace Scripts.Sim1
         PathToHome
     }
 
-    [Serializable]
-    public struct AntConfig
-    {
-        [Min(0)]
-        public float MarkerSpawnInterval;
-
-        [Min(0)]
-        public float WalkSpeed;
-
-        [Range(0, 1)]
-        public float RotationSpeed;
-
-        [Range(0, 5)]
-        public float RandomRotationDelta;
-
-        [Min(0)]
-        public float DetectionRadius;
-
-        [Min(0)]
-        public float FoodMarkerLifeTime;
-
-        [Min(0)]
-        public float HomeMarkerLifeTime;
-
-        [Min(0)]
-        public float FoodGrabDistance;
-
-        [Range(0, 1)]
-        public float CenterMassCorrectionSpeed;
-    }
-
+    [SelectionBase]
     public class Ant : MonoBehaviour
     {
+        [Header("Main Properties")]
         [SerializeField]
-        private Marker markerPrototype;
+        private AntState antState = AntState.SearchingFood;
 
         [SerializeField]
         [InspectorReadOnly]
-        private float markerSpawnInterval;
-        public float MarkerSpawnInterval
+        private Marker previousProducedMarker = null;
+
+        [SerializeField]
+        [InspectorReadOnly]
+        private Home home;
+        public Home Home
         {
-            get => markerSpawnInterval;
-            set => markerSpawnInterval = value;
+            get => home;
+            set => home = value;
         }
+
+        [SerializeField]
+        [InspectorReadOnly]
+        private string antName;
+
+        [Header("About markers")]
+        [SerializeField]
+        private Marker markerPrototype;
+
+        [Min(0)]
+        [SerializeField]
+        private float markerSpawnInterval;
+
+        [Min(0)]
+        [SerializeField]
+        private float markersDetectionRadius;
 
         [SerializeField]
         [InspectorReadOnly]
         private float timeToSpawnMarker;
 
+        [Header("FOOD")]
+        [Min(0)]
+        [SerializeField]
+        private float foodGrabDistance;
+
+        [Min(0)]
+        [SerializeField]
+        private float foodDetectionRadius;
+
+        [SerializeField]
+        private Vector3 foodDetectionRadiusDelta;
+
+        [SerializeField]
+        private float haltDistance = 0.2f;
+
+        [SerializeField]
+        [InspectorReadOnly]
+        private Food haltFood = null;
+
+        [Header("FOOD marker")]
+        [Min(0)]
+        [SerializeField]
+        private float foodMarkerLifeTime;
+
+        [Header("HOME marker")]
+        [Min(0)]
+        [SerializeField]
+        [InspectorReadOnly]
+        private float homeMarkerLifeTime;
+
+        [Header("About moving")]
         [SerializeField]
         [InspectorReadOnly]
         private Vector3 walkDirection;
-        public Vector3 WalkDirection
-        {
-            get => walkDirection;
-            set => walkDirection = value;
-        }
 
+        [Min(0)]
         [SerializeField]
-        [InspectorReadOnly]
         private float walkSpeed;
-        public float WalkSpeed
-        {
-            get => walkSpeed;
-            set => walkSpeed = value;
-        }
 
+        [Range(0, 1)]
         [SerializeField]
-        [InspectorReadOnly]
         private float rotationSpeed;
-        public float RotationSpeed
-        {
-            get => rotationSpeed;
-            set => rotationSpeed = value;
-        }
 
+        [Range(0, 5)]
         [SerializeField]
-        [InspectorReadOnly]
-        private float detectionRadius;
-        public float DetectionRadius
-        {
-            get => detectionRadius;
-            set => detectionRadius = value;
-        }
-
-        [SerializeField]
-        [InspectorReadOnly]
-        private AntState antState = AntState.SearchingFood;
-        public AntState AntState
-        {
-            get => antState;
-            set => antState = value;
-        }
-
-        [SerializeField]
-        [InspectorReadOnly]
         private float randomDirectionDelta;
-        public float RandomDirectionDelta
-        {
-            get => randomDirectionDelta;
-            set => randomDirectionDelta = value;
-        }
+
+        [Range(0, 1)]
+        [SerializeField]
+        private float randomRotationSpeed;
+
+        [Range(0, 1)]
+        [SerializeField]
+        private float centerMassCorrectionSpeed;
 
         [SerializeField]
         [InspectorReadOnly]
-        private float foodGrabDistance;
-        private Food haltFood = null;
-        private float haltDistance = 0.2f;
-        private float foodMarkerLifeTime;
-        private float homeMarkerLifeTime;
+        private Vector3? centerDirection = null;
 
-        public void SetAntConfig(AntConfig config)
-        {
-            AntState = AntState.SearchingFood;
-            DetectionRadius = config.DetectionRadius;
-            MarkerSpawnInterval = config.MarkerSpawnInterval;
-            RotationSpeed = config.RotationSpeed;
-            WalkSpeed = config.WalkSpeed;
-            DetectionRadius = config.DetectionRadius;
-            foodMarkerLifeTime = config.FoodMarkerLifeTime;
-            homeMarkerLifeTime = config.HomeMarkerLifeTime;
-            timeToSpawnMarker = MarkerSpawnInterval;
-            foodGrabDistance = config.FoodGrabDistance;
-            RandomDirectionDelta = config.RandomRotationDelta;
-            centerMassCorrectionSpeed = config.CenterMassCorrectionSpeed;
-        }
+        [Header("Wall Avoid")]
+        [SerializeField]
+        private Transform leftDetectionPoint;
 
-        private Vector3 centerDirection = Vector3.zero;
+        [SerializeField]
+        private Transform rightDetectionPoint;
+
+        public event Action<Marker> OnMarkerCreated;
+
+        public bool ShowWallAvoidGizmo { get; set; } = true;
+        public bool ShowFoodDetectionArea { get; set; } = true;
+        public bool ShowMarkersDetectionArea { get; set; } = true;
+        public bool ShowMovementVectors { get; set; } = true;
 
         private void OnDrawGizmos()
         {
+            UnityEditor.Handles.color = Color.green;
+            if (ShowMarkersDetectionArea)
+            {
+                UnityEditor.Handles.DrawWireDisc(
+                    transform.position,
+                    Vector3.back,
+                    markersDetectionRadius
+                );
+            }
             UnityEditor.Handles.color = Color.yellow;
-            UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.back, detectionRadius);
-            UnityEditor.Handles.DrawLine(transform.position, transform.position + walkDirection);
+            if (ShowFoodDetectionArea)
+            {
+                UnityEditor.Handles.DrawWireDisc(
+                    transform.position + foodDetectionRadiusDelta,
+                    Vector3.back,
+                    foodDetectionRadius
+                );
+            }
+            if (ShowMovementVectors)
+            {
+                UnityEditor.Handles.DrawLine(
+                    transform.position,
+                    transform.position + walkDirection
+                );
+            }
             UnityEditor.Handles.color = Color.blue;
-            UnityEditor.Handles.DrawLine(transform.position, transform.position + centerDirection);
+            if (ShowMovementVectors && centerDirection != null)
+            {
+                UnityEditor.Handles.DrawLine(
+                    transform.position,
+                    transform.position + centerDirection.Value
+                );
+            }
+            if (ShowWallAvoidGizmo)
+            {
+                UnityEditor.Handles.DrawWireDisc(leftDetectionPoint.position, Vector3.back, 0.05f);
+                UnityEditor.Handles.DrawWireDisc(rightDetectionPoint.position, Vector3.back, 0.05f);
+            }
+            UnityEditor.Handles.color = Color.red;
+            foreach (Vector3 item in intersectPointsGizmo)
+            {
+                UnityEditor.Handles.DrawWireDisc(item, Vector3.back, 0.05f);
+            }
+        }
+
+        private void Awake()
+        {
+            walkDirection = Vector3.up.RotateZWithDegrees(UnityEngine.Random.Range(0f, 360f));
+            antName = Guid.NewGuid().ToString();
         }
 
         private void Update()
@@ -163,47 +192,49 @@ namespace Scripts.Sim1
             CorrectDirection();
             ApplyRandomRotation();
             Move();
+            AvoidWalls();
         }
 
         private void WorkWithFood()
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(
-                transform.position,
-                detectionRadius
+                transform.position + foodDetectionRadiusDelta,
+                foodDetectionRadius
             );
-            if (AntState == AntState.SearchingHome)
+            if (antState == AntState.SearchingHome)
             {
                 haltFood.transform.position =
                     transform.position + (walkDirection.normalized * haltDistance);
                 if (
-                    colliders.Any(
-                        x =>
-                            x.TryGetComponent(out Home home)
-                            && Vector3.Distance(transform.position, home.transform.position)
-                                <= foodGrabDistance
-                    )
+                    Vector3.Distance(
+                        transform.position,
+                        home.HomeZone.ClosestPoint(transform.position)
+                    ) <= foodGrabDistance
                 )
                 {
                     Destroy(haltFood.gameObject);
                     haltFood = null;
-                    AntState = AntState.SearchingFood;
+                    antState = AntState.SearchingFood;
                 }
             }
-            else if (AntState == AntState.SearchingFood)
+            if (antState == AntState.SearchingFood)
             {
-                IEnumerable<Collider2D> availableFood = colliders.Where(
+                IEnumerable<Collider2D> availableSourcesOfFood = colliders.Where(
                     x =>
-                        x.TryGetComponent(out Food food)
-                        && Vector3.Distance(transform.position, food.transform.position)
-                            <= foodGrabDistance
-                        && !food.Grabbed
+                        x.TryGetComponent(out FoodSource foodSource)
+                        && Vector3.Distance(
+                            transform.position,
+                            foodSource.FoodSourceZone.ClosestPoint(transform.position)
+                        ) <= foodGrabDistance
                 );
 
-                if (availableFood.Count() > 0)
+                if (availableSourcesOfFood.Count() > 0)
                 {
-                    haltFood = availableFood.First().GetComponent<Food>();
-                    haltFood.Grabbed = true;
-                    AntState = AntState.SearchingHome;
+                    availableSourcesOfFood
+                        .First()
+                        .GetComponent<FoodSource>()
+                        .GrabFood(out haltFood);
+                    antState = AntState.SearchingHome;
                 }
             }
         }
@@ -213,15 +244,15 @@ namespace Scripts.Sim1
             timeToSpawnMarker -= Time.deltaTime;
             if (timeToSpawnMarker <= 0)
             {
-                if (AntState == AntState.SearchingFood)
+                if (antState == AntState.SearchingFood)
                 {
                     SpawnMarker(MarkerType.PathToHome, homeMarkerLifeTime);
                 }
-                if (AntState == AntState.SearchingHome)
+                if (antState == AntState.SearchingHome)
                 {
                     SpawnMarker(MarkerType.PathToFood, foodMarkerLifeTime);
                 }
-                timeToSpawnMarker = MarkerSpawnInterval;
+                timeToSpawnMarker = markerSpawnInterval;
             }
         }
 
@@ -230,78 +261,90 @@ namespace Scripts.Sim1
             Marker marker = Instantiate(markerPrototype, transform.position, new Quaternion());
             marker.SetMarkerType(markerType);
             marker.LifeTime = lifeTime;
-        }
-
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.TryGetComponent(out Wall _))
+            marker.AntName = antName;
+            if (previousProducedMarker != null && previousProducedMarker.MarkerType == markerType)
             {
-                walkDirection = -walkDirection;
+                previousProducedMarker.NextMarker = marker;
             }
+            previousProducedMarker = marker;
+            OnMarkerCreated?.Invoke(marker);
         }
-
-        private void OnTriggerStay2D(Collider2D collision)
-        {
-            if (collision.TryGetComponent(out Wall _))
-            {
-                walkDirection = walkDirection.RotateZWithDegrees(4);
-            }
-        }
-
-        private float centerMassCorrectionSpeed;
 
         private void CorrectDirection()
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(
-                transform.position,
-                detectionRadius
+            centerDirection = FindPathDirection(
+                home.Markers.Where(
+                    x =>
+                        x.MarkerType
+                            == (
+                                antState == AntState.SearchingFood
+                                    ? MarkerType.PathToFood
+                                    : MarkerType.PathToHome
+                            )
+                        && Vector3.Distance(x.transform.position, transform.position)
+                            <= markersDetectionRadius
+                )
             );
-            List<Marker> markers = new();
-            MarkerType searchMarker =
-                AntState == AntState.SearchingFood ? MarkerType.PathToFood : MarkerType.PathToHome;
-            foreach (Collider2D collider in colliders)
+
+            if (centerDirection == null)
             {
-                if (collider.TryGetComponent(out Marker marker))
-                {
-                    if (marker.MarkerType == searchMarker)
-                    {
-                        markers.Add(marker);
-                    }
-                }
-            }
-            if (markers.Count == 0)
-            {
-                centerDirection = Vector3.zero;
+                intersectPointsGizmo.Clear();
                 return;
             }
-            float totalMass = 0;
-            float totalX = 0;
-            float totalY = 0;
-            foreach (Marker marker in markers)
-            {
-                totalMass += marker.Power;
-                totalX += marker.transform.position.x * marker.Power;
-                totalY += marker.transform.position.y * marker.Power;
-            }
-            Vector3 center = new(totalX / totalMass, totalY / totalMass, 0);
-
-            centerDirection = Vector3.Lerp(
-                centerDirection,
-                (center - transform.position).normalized,
-                centerMassCorrectionSpeed * Time.deltaTime
-            );
-
             walkDirection = walkDirection.RotateZWithDegrees(
-                Vector3.SignedAngle(
-                    walkDirection,
-                    (center - transform.position).normalized,
-                    Vector3.forward
-                ) * rotationSpeed
+                Vector3.SignedAngle(walkDirection, centerDirection.Value, Vector3.forward)
+                    * rotationSpeed
             );
+        }
+
+        private List<Vector3> intersectPointsGizmo = new();
+
+        private Vector3? FindPathDirection(IEnumerable<Marker> homeMarkers)
+        {
+            IEnumerable<Marker> neededMarkers = homeMarkers.Where(x => x.HasNextMarker);
+
+            if (neededMarkers.Count() == 0)
+            {
+                return null;
+            }
+
+            Vector3 vectorResult = Vector3.zero;
+            foreach (Marker needMarker in neededMarkers)
+            {
+                vectorResult += needMarker.VectorToNextMarker;
+            }
+
+            Vector3 startPoint = Vector3.zero;
+            foreach (Marker needMarker in neededMarkers)
+            {
+                startPoint += needMarker.transform.position;
+            }
+            startPoint /= neededMarkers.Count();
+
+            Vector3? intersection = MathTools.IntersectRayCircle(
+                startPoint,
+                startPoint + vectorResult,
+                transform.position,
+                markersDetectionRadius
+            );
+
+            if (intersection == null)
+            {
+                return null;
+            }
+
+            intersectPointsGizmo = new List<Vector3>() { intersection.Value };
+
+            return intersection.Value - transform.position;
         }
 
         private void ApplyRandomRotation()
         {
+            if (centerDirection != null)
+            {
+                return;
+            }
+
             float grad = UnityEngine.Random.Range(-randomDirectionDelta, randomDirectionDelta);
             float grad1 = UnityEngine.Random.Range(
                 -randomDirectionDelta * 2,
@@ -309,9 +352,26 @@ namespace Scripts.Sim1
             );
             if (grad * grad1 > 0)
             {
-                walkDirection = walkDirection.RotateZWithDegrees(
-                    UnityEngine.Random.Range(grad, grad1)
+                walkDirection = Vector3.LerpUnclamped(
+                    walkDirection,
+                    walkDirection.RotateZWithDegrees(UnityEngine.Random.Range(grad, grad1)),
+                    randomRotationSpeed
                 );
+            }
+        }
+
+        private void AvoidWalls()
+        {
+            bool leftWall = Physics2D
+                .OverlapPointAll(leftDetectionPoint.position)
+                .Any(x => x.TryGetComponent(out Wall _));
+            bool rightWall = Physics2D
+                .OverlapPointAll(rightDetectionPoint.position)
+                .Any(x => x.TryGetComponent(out Wall _));
+
+            if (leftWall && rightWall)
+            {
+                walkDirection = walkDirection.RotateZWithDegrees(180);
             }
         }
 

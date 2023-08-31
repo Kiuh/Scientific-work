@@ -120,7 +120,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.5
 --- !u!114 &115783206921332881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,17 +133,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d43b55c1c6a5f44a1ff10a8ca50484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  markersParent: {fileID: 0}
+  homeZone: {fileID: 2826533860070748864}
   antPrototype: {fileID: -5969829956146690637, guid: 7755404e37ce32245ae6869ceb28ca26, type: 3}
-  antConfig:
-    MarkerSpawnInterval: 0.3
-    WalkSpeed: 0.4
-    RotationSpeed: 0.13
-    RandomRotationDelta: 0.15
-    DetectionRadius: 1
-    FoodMarkerLifeTime: 100
-    HomeMarkerLifeTime: 100
-    FoodGrabDistance: 0.3
-    CenterMassCorrectionSpeed: 0.3
   antSpawnInterval: 1e+12
   startCount: 40
   timeToSpawn: 0
+  ants: []
+  markers: []
+  showWallAvoidGizmo: 1
+  showFoodDetectionArea: 1
+  showMarkersDetectionArea: 1
+  showMovementVectors: 1
+  showPathToNextMarker: 1

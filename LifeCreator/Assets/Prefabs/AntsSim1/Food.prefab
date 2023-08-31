@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2691516425141063872}
   - component: {fileID: 1765371114609631377}
-  - component: {fileID: 1430911969855218673}
   - component: {fileID: -3482455895406837757}
   m_Layer: 0
   m_Name: Food
@@ -86,41 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1430911969855218673
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5925658634911396480}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &-3482455895406837757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,4 +97,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f1c723359265446a05cc04fb27d2f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grabbed: 0

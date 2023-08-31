@@ -84,6 +84,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3358727205240762032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1451905661446149959}
+  m_Layer: 0
+  m_Name: RightWallDetectionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1451905661446149959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3358727205240762032}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2907390720992340265}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3817709986127266708
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +147,8 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2647494331786867982}
+  - {fileID: 7971743183173578527}
+  - {fileID: 1451905661446149959}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &285335191666231696
@@ -150,9 +183,9 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0015344843, y: 0.025950134}
-  m_Size: {x: 0.14836816, y: 0.39872432}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.4, y: 0.15}
+  m_Direction: 1
 --- !u!114 &-5969829956146690637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,13 +198,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3558e57183c5d4447a1aa3acadd55159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  markerPrototype: {fileID: 3823513648447771597, guid: 7eec6a56d218a1d43aec9a49a245571f, type: 3}
-  markerSpawnInterval: 0
-  timeToSpawnMarker: 0
-  walkDirection: {x: 0, y: 0, z: 0}
-  walkSpeed: 0
-  rotationSpeed: 0
-  detectionRadius: 0
   antState: 0
-  randomDirectionDelta: 0
-  foodGrabDistance: 0
+  previousProducedMarker: {fileID: 0}
+  home: {fileID: 0}
+  antName: 
+  markerPrototype: {fileID: 3823513648447771597, guid: 7eec6a56d218a1d43aec9a49a245571f, type: 3}
+  markerSpawnInterval: 0.25
+  markersDetectionRadius: 1
+  timeToSpawnMarker: 0
+  foodGrabDistance: 0.2
+  foodDetectionRadius: 1
+  foodDetectionRadiusDelta: {x: 0, y: 0, z: 0}
+  haltDistance: 0.2
+  haltFood: {fileID: 0}
+  foodMarkerLifeTime: 50
+  homeMarkerLifeTime: 50
+  walkDirection: {x: 0, y: 0, z: 0}
+  walkSpeed: 0.8
+  rotationSpeed: 0.2
+  randomDirectionDelta: 3
+  randomRotationSpeed: 0.6
+  centerMassCorrectionSpeed: 0.4
+  centerDirection: {x: 0, y: 0, z: 0}
+  leftDetectionPoint: {fileID: 7971743183173578527}
+  rightDetectionPoint: {fileID: 1451905661446149959}
+--- !u!1 &5256992741684256808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7971743183173578527}
+  m_Layer: 0
+  m_Name: LeftWallDetectionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7971743183173578527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5256992741684256808}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2907390720992340265}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
