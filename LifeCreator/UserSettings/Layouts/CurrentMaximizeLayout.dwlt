@@ -73,7 +73,7 @@ MonoBehaviour:
   m_UseMipMap: 0
   m_VSyncEnabled: 0
   m_Gizmos: 0
-  m_Stats: 1
+  m_Stats: 0
   m_SelectedSizes: 07000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_ZoomArea:
     m_HRangeLocked: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: c0faffffcafaffff04fbffff2c56000068560000
+      m_ExpandedIDs: 16fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -382,7 +382,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: 13}
+      snapOffset: {x: 0, y: 25}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-transform-toolbar
@@ -687,9 +687,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -2.9861875, y: -2.3994944, z: -0.41214275}
+    m_Target: {x: -0.899786, y: -1.0325369, z: -0.23416092}
     speed: 2
-    m_Value: {x: -2.9861875, y: -2.3994944, z: -0.41214275}
+    m_Value: {x: -0.899786, y: -1.0325369, z: -0.23416092}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -739,9 +739,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 13.492568
+    m_Target: 20.156822
     speed: 2
-    m_Value: 13.492568
+    m_Value: 20.156822
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1924,9 +1924,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: b2570000
-    m_LastClickedID: 22450
-    m_ExpandedIDs: 000000008457000086570000885700008a5700008c5700008e570000905700009257000094570000965700009857000000ca9a3bffffff7f
+    m_SelectedIDs: ae570000
+    m_LastClickedID: 22446
+    m_ExpandedIDs: 00000000825700008457000086570000885700008a5700008c5700008e5700009057000092570000945700009657000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1954,7 +1954,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000008457000086570000885700008a5700008c5700008e570000905700009257000094570000965700009857000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000825700008457000086570000885700008a5700008c5700008e57000090570000925700009457000096570000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

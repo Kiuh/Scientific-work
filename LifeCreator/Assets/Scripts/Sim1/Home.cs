@@ -10,6 +10,12 @@ namespace Scripts.Sim1
         private Transform markersParent;
 
         [SerializeField]
+        private Transform wallsSource;
+
+        [SerializeField]
+        private Transform foodSourcesSource;
+
+        [SerializeField]
         private Collider2D homeZone;
         public Collider2D HomeZone => homeZone;
 
@@ -39,6 +45,10 @@ namespace Scripts.Sim1
         public IEnumerable<FoodSource> FoodSources => foodSources;
 
         [SerializeField]
+        private List<Wall> walls = new();
+        public IEnumerable<Wall> Walls => walls;
+
+        [SerializeField]
         private bool showWallAvoidGizmo;
 
         [SerializeField]
@@ -52,6 +62,24 @@ namespace Scripts.Sim1
 
         [SerializeField]
         private bool showPathToNextMarker;
+
+        private void Awake()
+        {
+            foreach (Transform child in foodSourcesSource)
+            {
+                if (child.TryGetComponent(out FoodSource foodSource))
+                {
+                    foodSources.Add(foodSource);
+                }
+            }
+            foreach (Transform child in wallsSource)
+            {
+                if (child.TryGetComponent(out Wall wall))
+                {
+                    walls.Add(wall);
+                }
+            }
+        }
 
         private void Start()
         {

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3149684683922665425}
   - component: {fileID: 8589934034256440776}
-  - component: {fileID: 2826533860070748864}
   - component: {fileID: 115783206921332881}
+  - component: {fileID: 9172384779140339919}
   m_Layer: 0
   m_Name: Home
   m_TagString: Untagged
@@ -86,7 +86,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &2826533860070748864
+--- !u!114 &115783206921332881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7857434576873496037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0d43b55c1c6a5f44a1ff10a8ca50484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markersParent: {fileID: 0}
+  wallsSource: {fileID: 0}
+  foodSourcesSource: {fileID: 0}
+  homeZone: {fileID: 0}
+  antPrototype: {fileID: -5969829956146690637, guid: 7755404e37ce32245ae6869ceb28ca26, type: 3}
+  antSpawnInterval: 1e+12
+  startCount: 40
+  timeToSpawn: 0
+  ants: []
+  markers: []
+  foodSources: []
+  walls: []
+  showWallAvoidGizmo: 1
+  showFoodDetectionArea: 1
+  showMarkersDetectionArea: 1
+  showMovementVectors: 1
+  showPathToNextMarker: 1
+--- !u!58 &9172384779140339919
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,34 +144,9 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &115783206921332881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7857434576873496037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d43b55c1c6a5f44a1ff10a8ca50484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markersParent: {fileID: 0}
-  homeZone: {fileID: 2826533860070748864}
-  antPrototype: {fileID: -5969829956146690637, guid: 7755404e37ce32245ae6869ceb28ca26, type: 3}
-  antSpawnInterval: 1e+12
-  startCount: 40
-  timeToSpawn: 0
-  ants: []
-  markers: []
-  showWallAvoidGizmo: 1
-  showFoodDetectionArea: 1
-  showMarkersDetectionArea: 1
-  showMovementVectors: 1
-  showPathToNextMarker: 1

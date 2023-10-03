@@ -362,12 +362,8 @@ namespace Scripts.Sim1
 
         private void AvoidWalls()
         {
-            bool leftWall = Physics2D
-                .OverlapPointAll(leftDetectionPoint.position)
-                .Any(x => x.TryGetComponent(out Wall _));
-            bool rightWall = Physics2D
-                .OverlapPointAll(rightDetectionPoint.position)
-                .Any(x => x.TryGetComponent(out Wall _));
+            bool leftWall = home.Walls.Any(x => x.IsPointInBounds(leftDetectionPoint.position));
+            bool rightWall = home.Walls.Any(x => x.IsPointInBounds(rightDetectionPoint.position));
 
             if (leftWall && rightWall)
             {

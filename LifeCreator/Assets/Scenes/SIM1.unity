@@ -198,6 +198,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14850974}
   m_CullTransparentMesh: 1
+--- !u!58 &17850238 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 9172384779140339919, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
+  m_PrefabInstance: {fileID: 1321565030305054935}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &337803954
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +467,7 @@ GameObject:
   m_Component:
   - component: {fileID: 666107230}
   m_Layer: 0
-  m_Name: Food
+  m_Name: FoodSources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1893,13 +1898,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
+      propertyPath: homeZone
+      value: 
+      objectReference: {fileID: 17850238}
+    - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
       propertyPath: startCount
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
+      propertyPath: wallsSource
+      value: 
+      objectReference: {fileID: 1051956548}
+    - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
       propertyPath: markersParent
       value: 
       objectReference: {fileID: 1318827017}
+    - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
+      propertyPath: foodSourcesSource
+      value: 
+      objectReference: {fileID: 666107230}
     - target: {fileID: 115783206921332881, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
       propertyPath: showWallAvoidGizmo
       value: 0
@@ -1967,6 +1984,10 @@ PrefabInstance:
     - target: {fileID: 7857434576873496037, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
       propertyPath: m_Name
       value: Home
+      objectReference: {fileID: 0}
+    - target: {fileID: 9172384779140339919, guid: c94937110da0c6449a4e37aa529931a5, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
